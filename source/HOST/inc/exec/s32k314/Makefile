@@ -12,11 +12,11 @@
 myNAME=boot
 
 ################################################################################
-DEVICE=s32k116
-HDEVICE=s32k
+DEVICE=s32k314
+HDEVICE=s32k314
 
 TOOLPREFIX=/usr/local/toolchain/arm-none-eabi/bin/arm-none-eabi
-UNILIBPREFIX=/usr/local/toolchain/unilib/s32k
+UNILIBPREFIX=/usr/local/toolchain/unilib/s32k3xx
 
 CC=$(TOOLPREFIX)-gcc
 AS=$(TOOLPREFIX)-as
@@ -26,11 +26,11 @@ OC=$(TOOLPREFIX)-objcopy
 OD=$(TOOLPREFIX)-objdump
 SZ=$(TOOLPREFIX)-size
 
-CFLAGS=-Wall -O3 -mfloat-abi=soft -mthumb -mcpu=cortex-m0 -msoft-float -fno-builtin -fno-common -nostartfiles -nostdlib -fshort-double
+CFLAGS=-Wall -O3 -mfloat-abi=soft -mthumb -mcpu=cortex-m4 -msoft-float -fno-builtin -fno-common -nostartfiles -nostdlib -fshort-double
 CFLAGS+=-I$(UNILIBPREFIX)/include -L$(UNILIBPREFIX)/lib
 CFLAGS+=-I./inc
 
-RLDOPTS=-Wl,-script=$(UNILIBPREFIX)/ldscripts/s32k_pexec.x
+RLDOPTS=-Wl,-script=$(UNILIBPREFIX)/ldscripts/s32k3_pexec.x
 RLDOPTS+=-nostartfiles -nostdlib
 OCFLAGS=-O srec
 OC1FLAGS=-O ihex
@@ -55,6 +55,12 @@ build/%.o: ./%.s
 
 dir:
 	mkdir -p build
+
+debug:	clean bin
+	uprog2 S32K312 -dr boot.s37
+
+run:	clean bin
+	uprog2 S32K312 -rr boot.s37
 
 clean:
 	@rm -rf build

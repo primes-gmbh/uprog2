@@ -112,7 +112,9 @@ void debug_armcortex(int mode)
 		printf("\nSTART CODE AT 0x%02x%02x%02x%02x\n",memory[7],memory[6],memory[5],memory[4] & 0xFE);
 		
 		errc=prg_comm(0x128,8,12,0,0,0,0,0,0);	//set pc + sp	
-		errc=prg_comm(0x12a,0,100,0,0,0,0,0,0);	
+		errc=prg_comm(0x129,0,100,0,0,0,0,0,0);	
+
+		sleep(1);
 		show_cortex_registers();		
 
 		j=0;
@@ -133,6 +135,12 @@ void debug_armcortex(int mode)
 					errc=prg_comm(0x129,0,100,0,0,0,0,0,0);	
 					show_cortex_registers();		
 				}
+
+				//view
+				if((strstr(dbg_line,"v")-dbg_line) == 0)
+				{
+					show_cortex_registers();		
+				}
 			
 				//cont
 				if((strstr(dbg_line,"c")-dbg_line) == 0)
@@ -143,6 +151,57 @@ void debug_armcortex(int mode)
 					errc=prg_comm(0x23b,0,100,0,0,0,0,0,0);		// halt	
 					show_cortex_registers();	
 				}
+
+				//test
+				if((strstr(dbg_line,"t")-dbg_line) == 0)
+				{
+					errc=prg_comm(0x12B,0,0,0,0,0,0,0,0);		// run
+				//	waitkey_dbg2();
+				
+					do
+					{
+						i=get_currentkey();
+						printf("key=%08X ",c);
+						usleep(100000);
+						if(c == 'r')
+						{
+							dbg_addr=0x20400C00;
+							memory[0]=1;			
+							errc=prg_comm(0x23c,4,32,0,0,dbg_addr & 0xff,(dbg_addr >> 8) & 0xff,(dbg_addr >> 16) & 0xff,(dbg_addr >> 24) & 0xff);
+							show_ldata(0,4,dbg_addr);
+							usleep(250000);
+						}
+
+						if(c == 'w')
+						{
+							dbg_addr=0x20400C00;
+							dbg_val=0x00400053;
+
+							memory[0]=dbg_addr & 0xfc;			
+							memory[1]=(dbg_addr >> 8) & 0xff;			
+							memory[2]=(dbg_addr >> 16) & 0xff;			
+							memory[3]=(dbg_addr >> 24) & 0xff;			
+							memory[4]=dbg_val & 0xff;			
+							memory[5]=(dbg_val >> 8) & 0xff;			
+							memory[6]=(dbg_val >> 16) & 0xff;			
+							memory[7]=(dbg_val >> 24) & 0xff;			
+							errc=prg_comm(0x23d,8,0,0,0,0,0,0,0);
+
+							memory[0]=1;			
+							errc=prg_comm(0x23c,4,32,0,0,dbg_addr & 0xff,(dbg_addr >> 8) & 0xff,(dbg_addr >> 16) & 0xff,(dbg_addr >> 24) & 0xff);
+							show_ldata(0,4,dbg_addr);
+							usleep(250000);
+						}
+
+
+						
+					
+					}while(c != 0x1B);
+					
+					errc=prg_comm(0x23b,0,100,0,0,0,0,0,0);		// halt	
+					show_cortex_registers();	
+				}
+
 			
 				//go
 				if((strstr(dbg_line,"g")-dbg_line) == 0)
@@ -1009,6 +1068,40 @@ void debug_armcortex(int mode)
 					}			
 				}			
 
+				//read longs
+				if((strstr(dbg_line,"rsl")-dbg_line) == 0)
+				{	
+					dbg_addr=0;dbg_ptr=dbg_line;
+					while(*dbg_ptr > 0x20) dbg_ptr++;	//sarch for space or end
+					
+					if(*dbg_ptr == 0x20)
+					{				
+						while(*dbg_ptr == 0x20) dbg_ptr++;	//sarch for no space
+						if(*dbg_ptr > 0x20)
+						{				
+							while(*dbg_ptr > 0x20) 
+							{
+								c=*dbg_ptr;if(c > 0x60) c-=0x20;
+								
+								if(c==0x30) dbg_addr = (dbg_addr << 4) + 0;if(c==0x31) dbg_addr = (dbg_addr << 4) + 1;
+								if(c==0x32) dbg_addr = (dbg_addr << 4) + 2;if(c==0x33) dbg_addr = (dbg_addr << 4) + 3;
+								if(c==0x34) dbg_addr = (dbg_addr << 4) + 4;if(c==0x35) dbg_addr = (dbg_addr << 4) + 5;
+								if(c==0x36) dbg_addr = (dbg_addr << 4) + 6;if(c==0x37) dbg_addr = (dbg_addr << 4) + 7;
+								if(c==0x38) dbg_addr = (dbg_addr << 4) + 8;if(c==0x39) dbg_addr = (dbg_addr << 4) + 9;
+								if(c==0x41) dbg_addr = (dbg_addr << 4) + 10;if(c==0x42) dbg_addr = (dbg_addr << 4) + 11;
+								if(c==0x43) dbg_addr = (dbg_addr << 4) + 12;if(c==0x44) dbg_addr = (dbg_addr << 4) + 13;
+								if(c==0x45) dbg_addr = (dbg_addr << 4) + 14;if(c==0x46) dbg_addr = (dbg_addr << 4) + 15;
+								dbg_addr &= 0xffffffff;	dbg_ptr++;
+							}
+							//OK we have the address
+							memory[0]=1;			
+							errc=prg_comm(0x23c,4,32,0,0,dbg_addr & 0xff,(dbg_addr >> 8) & 0xff,(dbg_addr >> 16) & 0xff,(dbg_addr >> 24) & 0xff);
+							show_ldata(0,4,dbg_addr);
+						}	
+					}			
+				}			
+
+
 
 				//write long
 				if((strstr(dbg_line,"wl")-dbg_line) == 0)
@@ -1268,10 +1361,11 @@ void debug_armcortex(int mode)
 				{
 					errc=prg_comm(0x12B,0,0,0,0,0,0,0,0);		// run
 					waitkey_dbg2();
-				
+					
 					errc=prg_comm(0x23b,0,100,0,0,0,0,0,0);		// halt	
 					show_cortex_registers();	
 				}
+
 
 				//go
 				if((strstr(dbg_line,"g")-dbg_line) == 0)

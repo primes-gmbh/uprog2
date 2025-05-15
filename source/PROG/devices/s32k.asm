@@ -55,7 +55,7 @@
 .equ			S32K_WRITE_TAR		= 0xd1
 
 .equ			S32K_READ_IDR		= 0xed		;08
-.equ			S32K_WRITE_IDR		= 0xc9
+.equ			S32K_WRITE_SEL		= 0xc9
 
 .equ			S32K_READ_DRW		= 0xf9		;0C
 .equ			S32K_WRITE_DRW		= 0xdd
@@ -66,6 +66,7 @@
 ; R19: 	bit 0 	without JTAG->SWD sequence
 ;	bit 1	with RESET enabled
 ;	bit 2	no debug core start
+;	bit 4   no autoincrement
 ;-------------------------------------------------------------------------------
 s32k_init:		out		CTRLPORT,const_0
 			sbi		CTRLDDR,S32K_RST
@@ -96,7 +97,6 @@ s32k_init_1:		cbi		CTRLPORT,S32K_CLOCK
 			ldi		ZH,0
 			call		api_wait_ms
 
-
 			ldi		YL,0
 			ldi		YH,1
 
@@ -116,22 +116,20 @@ s32k_init_2:		rcall		swd32_reset		;reset state machine
 			brne		s32k_init_2
 			rjmp		s32k_init_err
 
-s32k_init_3:		st		Y+,r20			;return ID
-			st		Y+,r21
-			st		Y+,r22
-			st		Y+,r23
+s32k_init_3:		call		gen_w32
 
 			sbrc		r19,0
 			rjmp		s32k_init_end
 
 			ldi		ZL,LOW(s32k_data_init1*2)
 			ldi		ZH,HIGH(s32k_data_init1*2)
+			sbrc		r19,4
+			adiw		ZL,36
+			sbrc		r19,4
+			adiw		ZL,30
 
 			rcall		swd32_read_ctrlstat			
 
-
-
-			;DebugPortStart
 			ldi		r24,5
 s32k_init_3a:		rcall		swd32_write_dap_table
 			dec		r24
@@ -180,6 +178,24 @@ s32k_data_init1:	;DebugPortStart
 			.db S32K_WRITE_CTRL,	0x00,	0x50,0x00,0x0F,0x00	;init AP transfer mode
 
 			;DebugCoreStart
+			.db S32K_WRITE_CSW,	0x00,	0x23,0x00,0x00,0x32	;32 bit access, auto increment
+			.db S32K_WRITE_TAR,	0x00,	0xE0,0x00,0xED,0xF0	;DHCSR
+			.db S32K_WRITE_DRW,	0x00,	0xA0,0x5F,0x00,0x09	;halt CPU and enable debug
+			
+			;set reset vector catch
+			.db S32K_WRITE_TAR,	0x00,	0xE0,0x00,0xED,0xFC	;DEMCR
+			.db S32K_WRITE_DRW,	0x00,	0x00,0x00,0x00,0x01	;enable reset vector catch
+			.db S32K_WRITE_DRW,	0x00,	0x00,0x00,0x00,0x01	;enable reset vector catch		
+
+
+s32k_data_init2:	;DebugPortStart
+			.db S32K_WRITE_ABORT,	0x00,	0x00,0x00,0x00,0x1e	;clear all errors
+			.db S32K_WRITE_SELECT,	0x00,	0x00,0x00,0x00,0x00	;switch to Bank 0x00			
+			.db S32K_WRITE_CTRL,	0x00,	0x50,0x00,0x00,0x00	;power up debug interface
+			.db S32K_WRITE_CTRL,	0x00,	0x54,0x00,0x00,0x00	;request debug reset
+			.db S32K_WRITE_CTRL,	0x00,	0x50,0x00,0x0F,0x00	;init AP transfer mode
+
+			;DebugCoreStart
 			.db S32K_WRITE_CSW,	0x00,	0x23,0x00,0x00,0x02	;32 bit access
 			.db S32K_WRITE_TAR,	0x00,	0xE0,0x00,0xED,0xF0	;DHCSR
 			.db S32K_WRITE_DRW,	0x00,	0xA0,0x5F,0x00,0x09	;halt CPU and enable debug
@@ -188,6 +204,91 @@ s32k_data_init1:	;DebugPortStart
 			.db S32K_WRITE_TAR,	0x00,	0xE0,0x00,0xED,0xFC	;DEMCR
 			.db S32K_WRITE_DRW,	0x00,	0x00,0x00,0x00,0x01	;enable reset vector catch
 			.db S32K_WRITE_DRW,	0x00,	0x00,0x00,0x00,0x01	;enable reset vector catch		
+
+
+;-------------------------------------------------------------------------------
+; check_auth
+;-------------------------------------------------------------------------------
+s32k3_check_auth:	ldi		YL,0
+			ldi		YH,1
+			rcall		swd32_reginit		;set registers for faster output
+
+			ldi		ZL,LOW(s32k3_data_cauth*2)
+			ldi		ZH,HIGH(s32k3_data_cauth*2)
+
+			rcall		swd32_write_dap_table
+			rcall		swd32_write_dap_table
+			rcall		swd32_write_dap_table
+			rcall		s32k_rap0
+
+			rcall		swd32_write_dap_table
+			rcall		s32k_rap0
+			
+
+			rcall		swd32_write_dap_table
+			rcall		s32k_rap0
+			
+			jmp		main_loop_ok
+
+
+
+s32k3_data_cauth:	;DebugPortStart
+			.db S32K_WRITE_ABORT,	0x00,	0x00,0x00,0x00,0x1e	;clear all errors
+			.db S32K_WRITE_SELECT,	0x00,	0x07,0x00,0x00,0x90	;switch to SDA AP			
+			.db S32K_WRITE_CSW,	0x00,	0x00,0x00,0x00,0x00	;init AP transfer mode
+			.db S32K_WRITE_SELECT,	0x00,	0x07,0x00,0x00,0x80	;switch to SDA AP addr 8x			
+			.db S32K_WRITE_CSW,	0x00,	0x30,0x00,0x00,0xF0	;init AP transfer mode
+			.db S32K_WRITE_SELECT,	0x00,	0x04,0x00,0x00,0x00	;switch to SDA AP addr 9x			
+
+
+;-------------------------------------------------------------------------------
+; check_test
+;-------------------------------------------------------------------------------
+s32k3_check_test:	ldi		YL,0
+			ldi		YH,1
+			rcall		swd32_reginit		;set registers for faster output
+
+			ldi		ZL,LOW(s32k3_data_test*2)
+			ldi		ZH,HIGH(s32k3_data_test*2)
+
+			rcall		swd32_write_dap_table
+			rcall		swd32_write_dap_table
+			rcall		swd32_write_dap_table
+;			rcall		swd32_write_dap_table
+
+			ldi		XL,S32K_READ_CSW	;read ID code
+			rcall		swd32_read_dap
+
+
+			ldi		XL,S32K_READ_TAR	;read ID code
+			rcall		swd32_read_dap
+
+
+			ldi		XL,S32K_READ_CSW	;read ID code
+			rcall		swd32_read_dap
+
+
+			ldi		XL,S32K_READ_TAR	;read ID code
+			rcall		swd32_read_dap
+
+
+;			ldi		XL,S32K_READ_IDR	;read ID code
+;			rcall		swd32_read_dap
+
+;			rcall		swd32_read_drwx		;dummy value
+
+
+			call		gen_w32
+			jmp		main_loop_ok
+
+
+
+s32k3_data_test:	;DebugPortStart
+			.db S32K_WRITE_ABORT,	0x00,	0x00,0x00,0x00,0x1e	;clear all errors
+			.db S32K_WRITE_SELECT,	0x00,	0x06,0x00,0x00,0x00	;switch to MDM AP			
+			.db S32K_WRITE_CTRL,	0x00,	0x50,0x00,0x0F,0x00	;init AP transfer mode
+;			.db S32K_WRITE_TAR,	0x00,	0xE0,0x00,0xED,0xF0	;DHCSR
+;			.db S32K_WRITE_TAR,	0x00,	0x00,0x40,0x00,0x00	;addr
 
 
 ;-------------------------------------------------------------------------------
@@ -226,7 +327,6 @@ s32k_data_erase2:	.db S32K_WRITE_TAR,	0x00,	0x40,0x02,0x00,0x00	;FSTAT
 			.db S32K_WRITE_DRW,	0x00,	0x0B,0x00,0x00,0x00	;start erase (was: 49)
 			.db S32K_WRITE_TAR,	0x00,	0x40,0x02,0x00,0x00	;FSTAT			
 			.db S32K_WRITE_DRW,	0x00,	0x80,0x00,0x00,0x80	;start erase
-
 
 
 ;-------------------------------------------------------------------------------
@@ -396,7 +496,7 @@ s32k_data_unlock:	.db S32K_WRITE_TAR,	0x00,	0x40,0x02,0x00,0x00	;FSTAT
 ;-------------------------------------------------------------------------------
 s32k_gstatus:		ldi		ZL,LOW(s32k_data_gstatus*2)
 			ldi		ZH,HIGH(s32k_data_gstatus*2)
-			ldi		r24,4
+s32k_gstatus_1:		ldi		r24,4
 
 			sbi		CTRLPORT,S32K_TRIGGER
 			cbi		CTRLPORT,S32K_TRIGGER			
@@ -420,7 +520,6 @@ s32k_data_gstatus:	.db S32K_WRITE_ABORT,	0x00,	0x00,0x00,0x00,0x1e	;clear all er
 			.db S32K_WRITE_SELECT,	0x00,	0x01,0x00,0x00,0x00	;switch to MDM-AP
 			.db S32K_WRITE_CTRL,	0x00,	0x50,0x00,0x00,0x00	;power up debug interface
 			.db S32K_WRITE_CTRL,	0x00,	0x54,0x00,0x00,0x00	;request debug reset
-
 
 
 ;-------------------------------------------------------------------------------
@@ -455,3 +554,11 @@ s32k_w20ms:		push		ZL
 			pop		ZL
 			ret
 			
+s32k_rap0:		ldi		XL,S32K_READ_CSW	;read
+			rcall		swd32_read_dap
+
+			ldi		XL,S32K_READ_RDBUFF	;read
+			rcall		swd32_read_dap
+		
+			jmp		gen_w32
+

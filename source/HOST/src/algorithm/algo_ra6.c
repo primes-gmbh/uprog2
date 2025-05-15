@@ -308,8 +308,8 @@ int ra6_init(unsigned char *idb)
 
 int ra6_cmd_entry(unsigned char mode)
 {
-	int i,k,e;
-	unsigned long addr;
+	int i,e;
+//	unsigned long addr;
 
 //	printf("----------------- CMD ENTRY -------------------\n");
 
@@ -336,7 +336,7 @@ int ra6_cmd_entry(unsigned char mode)
 
 	usleep(100000);
 
-	return 0;
+	return e;
 	
 	//read back registers
 	ra6_showreg08(0x4001E416,	"FWEPROR ");
@@ -347,14 +347,14 @@ int ra6_cmd_entry(unsigned char mode)
 
 	ra6_set32();
 
-	return 0;
+	return e;
 }
 
 
 
 int ra6_prog_block(unsigned long addr, unsigned long maddr,int blen)
 {
-	int k,e;
+	int k;
 	unsigned long i;
 
 //	printf("------ PROGAMMING BLOCK AT 0x%08lX WITH DATA FROM 0x%08lX -------------------\n",addr,maddr);
@@ -438,15 +438,16 @@ int ra6_prog_id(unsigned char *idb)
 	memory[i++]=0xc5;	memory[i++]=0x80;	memory[i++]=0x00;	memory[i++]=0x00;		memory[i++]=0x02;		//DBG access enable, 32bits
 	memory[i++]=0x55;	memory[i++]=0x00;	memory[i++]=0x00;	memory[i++]=0x80;		memory[i++]=0x00;		//wait for 1 in FRDY
 
-	prg_comm(0xa5,i-ROFFSET,0,ROFFSET,0,4,0,0,(i-ROFFSET)/5);
+	e=prg_comm(0xa5,i-ROFFSET,0,ROFFSET,0,4,0,0,(i-ROFFSET)/5);
 
 	sleep(1);
+	return e;
 }
 
 
 int ra6_era_block(unsigned long addr)
 {
-	int i,k,e;
+	int i;
 
 //	memory[1000]=1;
 //	e=prg_comm(0x23c,1,4,1000,1000,0x80,0xE0,0x7F,0x40);		//read 4 bytes
@@ -479,6 +480,7 @@ int ra6_aerase(void)
 {
 	int i,e;
 	unsigned long addr;
+//	waitkey();
 
 	i=0;
 	// SEL APB-AB
@@ -518,7 +520,7 @@ int ra6_aerase(void)
 
 	progress("ALL ERASE ",32,0);
 
-	e=prg_comm(0x258,0,0,0,0,0,0,0,0);
+	e=prg_comm(0x258,0,0,0,0,0,0,0,0);					//reset pulse
 
 	sleep(1);
 
@@ -538,7 +540,7 @@ int ra6_aerase(void)
 	i=0;
 	do
 	{
-		addr=0x80000400;
+		addr=0x80000400;	//MCUSTAT
 		memory[0]=1;
 		e=prg_comm(0x23c,1,4,0,0,		//read 4 bytes
 				(addr >> 0) & 0xff,
@@ -547,15 +549,15 @@ int ra6_aerase(void)
 				(addr >> 24) & 0xff);
 	
 //		printf("MCUSTAT: %02X%02X%02X%02X\n",memory[3],memory[2],memory[1],memory[0]);
-		usleep(500000);
+		if((memory[0] & 2) != 2) usleep(500000);
 		i++;
 		progress("ALL ERASE ",32,i);
 
-	}while(((memory[0] & 2) != 2) && (i < 32));
+	}while(i < 32);
 
 	i=prg_comm(0x258,0,0,0,0,0,0,0,0);
 
-	sleep(1);
+//	sleep(1);
 
 	e=prg_comm(0x254,0,16,0,0,0,0,0,0);					//init
 
@@ -608,6 +610,7 @@ int prog_ra6(void)
 
 		printf("-- ed -- data flash erase\n");
 		printf("-- pd -- data flash program\n");
+		printf("-- vd -- data flash verify\n");
 		printf("-- rd -- data flash readout\n");
 		printf("-- vc -- config bytes view\n");
 		printf("-- rc -- config bytes readout\n");
@@ -659,6 +662,7 @@ int prog_ra6(void)
 	main_readout=check_cmd_read("rm","code flash",&main_prog,&main_verify);
 
 	data_prog=check_cmd_prog("pd","data flash");
+	data_verify=check_cmd_verify("vd","data flash");
 	data_readout=check_cmd_read("rd","data flash",&data_prog,&data_verify);
 
 	if(find_cmd("rc"))
@@ -746,6 +750,12 @@ int prog_ra6(void)
 
 	printf("JID: %02X%02X%02X%02X\n",memory[3],memory[2],memory[1],memory[0]);
 //	printf("CTL: %02X%02X%02X%02X\n",memory[7],memory[6],memory[5],memory[4]);
+
+	if(memory[0]==0xff)
+	{
+		errc=0x50;
+		goto RA6_EXIT;		
+	}
 
 	if(all_erase ==1)
 	{
@@ -839,7 +849,7 @@ int prog_ra6(void)
 
 		for(i=0;i<blocks;i++)
 		{
-			if(must_prog(maddr,128) && (errc==0))
+			if(must_prog(maddr,16) && (errc==0))
 			{
 				ra6_prog_block(addr,maddr,8);
 			}
@@ -905,6 +915,7 @@ int prog_ra6(void)
 
 	if(((data_readout == 1) || (data_verify == 1)) && (errc == 0))
 	{
+//		waitkey();
 		maddr=0;
 		addr=param[2];
 		blocks=param[3]/max_blocksize;

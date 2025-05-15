@@ -30,7 +30,7 @@ unsigned long read_blockx(char * fname,unsigned long start_addr,unsigned long bl
 	//clear memory area
 	for(rbytes=0;rbytes<block_len;rbytes++)
 	{
-		memory[dest_addr+rbytes]=0xff;
+		memory[dest_addr+rbytes]=0xFF;
 	}
 
 	if(servermode == 0)
@@ -39,8 +39,6 @@ unsigned long read_blockx(char * fname,unsigned long start_addr,unsigned long bl
 		datei = fopen (fname, "r");
 
 		addr=0;
-		loaddr=0xffffffff;
-		hiaddr=0;
 		ioffset=0;
 
 		if (datei != NULL)
@@ -128,13 +126,13 @@ unsigned long read_blockx(char * fname,unsigned long start_addr,unsigned long bl
 					{
 						sscanf(strndup(line+9, 4),"%lx",&ioffset);
 						ioffset *= 16;
-						//printf("Segment: %05lX\n",ioffset);
+					//	printf("Segment: %08lX\n",ioffset);
 					}
 					if(rtype==4)
 					{
 						sscanf(strndup(line+9, 4),"%lx",&ioffset);
 						ioffset *= 65536;
-	//					printf("HIGH ADDR: %08lX\n",ioffset);
+					//	printf("HIGH ADDR: %08lX\n",ioffset);
 					}
 	
 				}
@@ -150,8 +148,6 @@ unsigned long read_blockx(char * fname,unsigned long start_addr,unsigned long bl
 	else
 	{
 		addr=0;
-		loaddr=0xffffffff;
-		hiaddr=0;
 		ioffset=0;
 		dptr=post_data_start;
 
@@ -245,13 +241,13 @@ unsigned long read_blockx(char * fname,unsigned long start_addr,unsigned long bl
 				{
 					sscanf(strndup(line+9, 4),"%lx",&ioffset);
 					ioffset *= 16;
-//					printf("Segment: %05lX\n",ioffset);
+				//	printf("Segment: %05lX\n",ioffset);
 				}
 				if(rtype==4)
 				{
 					sscanf(strndup(line+9, 4),"%lx",&ioffset);
 					ioffset *= 65536;
-//					printf("HIGH ADDR: %08lX\n",ioffset);
+				//	printf("HIGH ADDR: %08lX\n",ioffset);
 				}
 			}
 			if(!(strncmp(line,"#", 1)))
@@ -292,8 +288,6 @@ unsigned long read_blockx2(char * fname,unsigned long start_addr,unsigned long b
 		datei = fopen (fname, "r");
 
 		addr=0;
-		loaddr=0xffffffff;
-		hiaddr=0;
 		ioffset=0;
 
 		if (datei != NULL)
@@ -407,8 +401,6 @@ unsigned long read_blockx2(char * fname,unsigned long start_addr,unsigned long b
 	else
 	{
 		addr=0;
-		loaddr=0xffffffff;
-		hiaddr=0;
 		ioffset=0;
 		dptr=post_data_start;
 
@@ -502,13 +494,13 @@ unsigned long read_blockx2(char * fname,unsigned long start_addr,unsigned long b
 				{
 					sscanf(strndup(line+9, 4),"%lx",&ioffset);
 					ioffset *= 16;
-//					printf("Segment: %05lX\n",ioffset);
+				//	printf("Segment: %05lX\n",ioffset);
 				}
 				if(rtype==4)
 				{
 					sscanf(strndup(line+9, 4),"%lx",&ioffset);
 					ioffset *= 65536;
-//					printf("HIGH ADDR: %08lX\n",ioffset);
+				//	printf("HIGH ADDR: %08lX\n",ioffset);
 				}
 			}
 			if(!(strncmp(line,"#", 1)))
@@ -529,6 +521,8 @@ unsigned long read_block(unsigned long start_addr,unsigned long block_len,unsign
 	unsigned long res;
 	
 	res=0;
+	loaddr=0xffffffff;
+	hiaddr=0;
 	
 	if(file_found==2) res+=read_blockx(sfile,start_addr,block_len,dest_addr);
 	if(file2_found==2) res+=read_blockx(sfile2,start_addr,block_len,dest_addr);
@@ -543,6 +537,8 @@ unsigned long read_block_used(unsigned long start_addr,unsigned long block_len,u
 	unsigned long res;
 	
 	res=0;
+	loaddr=0xffffffff;
+	hiaddr=0;
 	
 	if(file_found==2) res+=read_blockx2(sfile,start_addr,block_len,dest_addr);
 	if(file2_found==2) res+=read_blockx2(sfile2,start_addr,block_len,dest_addr);

@@ -229,10 +229,7 @@ swd32_write_2:		movw		r20,r24
 			ldi		XL,SWD32_WRITE_TAR
 			rcall		swd32_write_dap
 			
-			ld		r20,Y+
-			ld		r21,Y+
-			ld		r22,Y+
-			ld		r23,Y+
+			call		gen_r32
 
 			ldi		XL,SWD32_WRITE_DRW
 			rcall		swd32_write_dap
@@ -248,14 +245,47 @@ swd32_write_2:		movw		r20,r24
 			brne		swd32_write_1
 			
 			sbiw		YL,4			;set back pointer
-			ld		r20,Y+
-			ld		r21,Y+
-			ld		r22,Y+
-			ld		r23,Y+
+			call		gen_r32
 
 			ldi		XL,SWD32_WRITE_DRW
 			rcall		swd32_write_dap		;write last word again
 			
+			jmp		main_loop_ok
+
+
+;-------------------------------------------------------------------------------
+; fast write
+; P1-P3 = Address
+; P4=pages
+;-------------------------------------------------------------------------------
+swd32_fwrite:	;	rjmp		swd32_write
+			ldi		YL,0
+			ldi		YH,1
+			mov		r25,r19
+		
+swd32_fwrite_1:		clr		r20
+			mov		r21,r16			;address l
+			mov		r22,r17			;address m
+			mov		r23,r18			;address h
+			ldi		XL,SWD32_WRITE_TAR
+			rcall		swd32_write_dap
+
+
+			ldi		r24,0x40
+swd32_fwrite_2:		call		gen_r32
+			ldi		XL,SWD32_WRITE_DRW
+			rcall		swd32_write_dap
+			
+			dec		r24
+			brne		swd32_fwrite_2
+			
+			add		r16,const_1
+			adc		r17,const_0			
+			adc		r18,const_0			
+			
+			dec		r25
+			brne		swd32_fwrite_1
+
 			jmp		main_loop_ok
 
 
@@ -291,6 +321,48 @@ swd32_read_2:		movw		r20,r24
 
 			dec		r19
 			brne		swd32_read_1
+			jmp		main_loop_ok
+
+;-------------------------------------------------------------------------------
+; fast read with incremented address
+; P1-P3 = Address
+; P4=pages
+;-------------------------------------------------------------------------------
+swd32_fread:	;	rjmp		swd32_read
+			ldi		YL,0
+			ldi		YH,1
+			mov		r25,r19
+		
+swd32_fread_1:		clr		r20
+			mov		r21,r16			;address l
+			mov		r22,r17			;address m
+			mov		r23,r18			;address h
+			ldi		XL,SWD32_WRITE_TAR
+			rcall		swd32_write_dap
+
+			ldi		XL,SWD32_READ_DRW
+			rcall		swd32_read_dap		;first dummy read
+			
+			ldi		r24,0x3f
+
+swd32_fread_2:		ldi		XL,SWD32_READ_DRW
+			rcall		swd32_read_dap		;data read
+			call		gen_w32
+		
+			dec		r24
+			brne		swd32_fread_2
+			
+			ldi		XL,SWD32_READ_RDBUFF
+			rcall		swd32_read_dap		;last value read
+			call		gen_w32
+			
+			add		r16,const_1
+			adc		r17,const_0			
+			adc		r18,const_0			
+			
+			dec		r25
+			brne		swd32_fread_1
+
 			jmp		main_loop_ok
 
 
@@ -447,6 +519,12 @@ swd32_data_exit:	.db SWD32_WRITE_TAR,	0x00,	0xE0,0x00,0xED,0xF0	;DHCSR
 ;-------------------------------------------------------------------------------
 ; flash command etc
 ;-------------------------------------------------------------------------------
+swd32_cmd3:		ldi		r20,0x00		;cmd word is at 0x20400C00
+			ldi		r21,0x0c
+			ldi		r22,0x40
+			ldi		r23,0x20
+			rjmp		swd32_cmd_0
+
 swd32_cmd2:		ldi		r20,0x00		;cmd word is at 0x18000c00
 			ldi		r21,0x0c
 			ldi		r22,0x00
@@ -463,18 +541,16 @@ swd32_cmd:		ldi		r20,0x00		;cmd word is at 0x20000c00
 			ldi		r21,0x0c
 			ldi		r22,0x00
 			ldi		r23,0x20
-swd32_cmd_0:		ldi		XL,SWD32_WRITE_TAR
+			rjmp		swd32_cmd_0
+
+swd32_cmd_0:		call		save_w32		;store address
+			ldi		XL,SWD32_WRITE_TAR
 			rcall		swd32_write_dap
 			
-			movw		r20,r16
+			movw		r20,r16			;store data
 			movw		r22,r18
 			ldi		XL,SWD32_WRITE_DRW
 			rcall		swd32_write_dap
-
-			movw		r20,r16
-			movw		r22,r18
-			ldi		XL,SWD32_WRITE_DRW
-;			rcall		swd32_write_dap
 			rcall		swd32_read_drwx		;dummy readout
 
 			ldi		r24,0
@@ -486,8 +562,11 @@ swd32_cmd_1:		sbiw		r24,1
 			ldi		ZH,0
 			call		api_wait_ms
 
+			call		restore_r32		;restore address
+			ldi		XL,SWD32_WRITE_TAR
 			rcall		swd32_read_drwx		;readout
-			cpi		r20,0x00
+
+			cpi		r20,0x00		;check lowest byte
 			brne		swd32_cmd_1		;wait until cmd word is zero
 			call		gen_wres		;write result to memory
 			jmp		main_loop_ok
@@ -908,6 +987,65 @@ swd32_swdexec2_ro:	rcall		swd32_wait_1ms
 			rcall		swd32_read_drwx		;read current address
 			jmp		main_loop_ok
 
+
+
+;-------------------------------------------------------------------------------
+; SWD execute commands 
+; par4 = bit 0=reset
+;-------------------------------------------------------------------------------
+swd32_swdexec3_endok:	jmp		main_loop_ok
+
+
+swd32_swdexec3: 	ldi		YL,0			;reset buffer pointer
+			ldi		YH,1
+			movw		ZL,YL			;copy
+			sbrc		r19,0
+			rcall		swd32_reginit
+			sbrs		r19,0
+			rcall		swd32_reginit_reset
+			sbrc		r19,0				
+			sbi		CTRLPORT,SWD32_RST
+			sbrs		r19,0
+			cbi		CTRLPORT,SWD32_RST
+
+			
+swd32_swdexec3_loop:	ld		XL,Z+			;command
+			cpi		XL,0xFF			;end?
+			breq		swd32_swdexec3_endok
+
+			cpi		XL,0xFE			;pause
+			brne		swd32_swdexec3_1
+
+			ld		r20,Z+			;time low
+			ld		r21,Z+			;time high
+			adiw		ZL,2			;skip next bytes
+			movw		r22,ZL
+			movw		ZL,r20
+			call		api_wait_ms
+			movw		ZL,r22
+			rjmp		swd32_swdexec3_loop
+			
+swd32_swdexec3_1:	sbrc		XL,5
+			rjmp		swd32_swdexec3_rdap
+
+			ld		r23,Z+
+			ld		r22,Z+
+			ld		r21,Z+
+			ld		r20,Z+
+			rcall		swd32_write_dap
+			cpi		XL,0x04
+			breq		swd32_swdexec3_loop
+			ldi		r16,0x50
+			add		r16,XL
+			jmp		main_loop		;errcode = 0x50 + code			
+
+
+swd32_swdexec3_rdap:	adiw		ZL,4			;ignore data
+			rcall		swd32_read_dap
+			call		gen_w32
+			rjmp		swd32_swdexec3_loop
+			
+			
 
 ;-------------------------------------------------------------------------------
 ; erase STM32 F0/F1/F2/F3/F4
@@ -1407,3 +1545,4 @@ swd32_get_register:	mov		XL,r19
 			rcall		swd32_read_dap
 			call		gen_wres
 			jmp		main_loop_ok
+

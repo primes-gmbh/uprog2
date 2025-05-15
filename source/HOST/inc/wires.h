@@ -219,20 +219,20 @@ const char * const cables[]=
 	// 72 RA6 
 	"(1=VSS  2=VDD  3=RST  4=SWDCK  5=SWDIO)",
 	
-	// 73 
-	"no connections",
+	// 73 AT24RF08
+	"(1=VSS  2=VDD  3=SCL  4=SDA)",
 	
 	// 74 
 	"no connections",
 	
-	// 75 
-	"no connections",
+	// 75 S32K3
+	"(1=VSS  2=VDD  3=RST  4=SWDCK  5=SWDIO)",
 	
-	// 76 
-	"no connections",
+	// 76 S32K14x 
+	"(1=VSS  2=VDD  3=RST  4=SWDCK  5=SWDIO)",
 	
-	// 77 
-	"no connections",
+	// 77 PIC18 
+	"(1=VSS  2=VDD  3=PGD  4=PGC  9=MCLR)",
 	
 	// 78 
 	"no connections",

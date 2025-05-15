@@ -42,3 +42,16 @@ gen_r32:		ld	r20,Y+
 			ld	r22,Y+
 			ld	r23,Y+
 			ret
+
+save_w32:		sts	0x1020,r20
+			sts	0x1021,r21
+			sts	0x1022,r22
+			sts	0x1023,r23
+			ret
+
+restore_r32:		lds	r20,0x1020
+			lds	r21,0x1021
+			lds	r22,0x1022
+			lds	r23,0x1023
+			ret
+		

@@ -23,9 +23,11 @@
 //###############################################################################
 
 #include <main.h>
-#include "exec/s32k/exec_s32k.h"
+//#include "exec/s32k1/exec_s32k1.h"
 
-void print_s32kswd_error(int errc)
+extern unsigned char exec_s32k1[512];
+
+void print_s32k14swd_error(int errc)
 {
 	printf("\n");
 	switch(errc)
@@ -60,15 +62,17 @@ void print_s32kswd_error(int errc)
 }
 
 
-int prog_s32kswd(void)
+int prog_s32k14swd(void)
 {
 	int errc,blocks,i,j;
 	unsigned long addr,len,maddr;
 	int mass_erase=0;
 	int main_prog=0;
+	int main_erase=0;
 	int main_verify=0;
 	int main_readout=0;
 	int main_check=0;
+	int data_erase=0;
 	int data_prog=0;
 	int data_verify=0;
 	int data_readout=0;
@@ -100,10 +104,12 @@ int prog_s32kswd(void)
 		printf("-- ea -- erase all (mass erase)\n");
 		printf("-- gs -- get MDM status register\n");
 		printf("-- un -- unsecure code (set FSEC to 0xFE)\n");
+		printf("-- em -- main flash erase\n");
 		printf("-- pm -- main flash program\n");
 		printf("-- vm -- main flash verify\n");
 		printf("-- cm -- main flash verify (margin check)\n");
 		printf("-- rm -- main flash readout\n");
+		printf("-- ed -- data flash erase\n");
 		printf("-- pd -- data flash program\n");
 		printf("-- vd -- data flash verify\n");
 		printf("-- cd -- data flash verify (margin check)\n");
@@ -191,7 +197,6 @@ int prog_s32kswd(void)
 	{
 		partition=1;
 		printf("## partition only 2K EEPROM\n");
-		partition=1;
 		eds=0x03;
 		pcode=0x08;
 		flexramfunc=0x00;
@@ -201,7 +206,6 @@ int prog_s32kswd(void)
 	{
 		partition=1;
 		printf("## partition only 4K EEPROM\n");
-		partition=1;
 		eds=0x02;
 		pcode=0x08;
 		flexramfunc=0x00;
@@ -211,7 +215,6 @@ int prog_s32kswd(void)
 	{
 		partition=1;
 		printf("## partition 8K dataflash / 2K EEPROM\n");
-		partition=1;
 		eds=0x03;
 		pcode=0x09;
 		flexramfunc=0x00;
@@ -221,7 +224,6 @@ int prog_s32kswd(void)
 	{
 		partition=1;
 		printf("## partition 16K dataflash / 4K EEPROM\n");
-		partition=1;
 		eds=0x02;
 		pcode=0x0A;
 		flexramfunc=0x00;
@@ -231,7 +233,6 @@ int prog_s32kswd(void)
 	{
 		partition=1;
 		printf("## partition 32K dataflash / 4K EEPROM\n");
-		partition=1;
 		eds=0x02;
 		pcode=0x0B;
 		flexramfunc=0x00;
@@ -249,7 +250,7 @@ int prog_s32kswd(void)
 		{
 			run_ram=1;
 			printf("## Action: run code in RAM using %s\n",sfile);
-			goto S32KSWD_ORUN;
+			goto s32k14swd_ORUN;
 		}
 	}
 	else if(find_cmd("dr"))
@@ -263,14 +264,14 @@ int prog_s32kswd(void)
 		{
 			debug_ram = 1;
 			printf("## Action: debug code in RAM using %s\n",sfile);
-			goto S32KSWD_ORUN;
+			goto s32k14swd_ORUN;
 		}
 	}
 	else if(find_cmd("df"))
 	{
 		debug_flash = 1;
 		printf("## Action: debug code in FLASH\n");
-		goto S32KSWD_ORUN;
+		goto s32k14swd_ORUN;
 	}
 	else
 	{
@@ -284,6 +285,18 @@ int prog_s32kswd(void)
 		{
 			mass_erase=1;
 			printf("## Action: mass erase\n");
+		}
+
+		if(find_cmd("em"))
+		{
+			main_erase=1;
+			printf("## Action: main flash erase\n");
+		}
+
+		if(find_cmd("ed"))
+		{
+			data_erase=1;
+			printf("## Action: data flash erase\n");
 		}
 
 		main_prog=check_cmd_prog("pm","code flash");
@@ -308,7 +321,7 @@ int prog_s32kswd(void)
 	}
 	printf("\n");
 
-S32KSWD_ORUN:
+s32k14swd_ORUN:
 
 	//open file if read 
 	if((main_readout == 1) || (data_readout == 1) || (eeprom_readout == 1))
@@ -331,11 +344,11 @@ S32KSWD_ORUN:
 //			show_data(0,4);
 			printf("RE-INIT\n");
 			errc=prg_comm(0x91,0,0,0,0,0,0,0,0);		//exit
-			errc=prg_comm(0x1D0,0,16,0,0,0,0,0,0);		//re-init
+			errc=prg_comm(0x1D0,0,16,0,0,0,0,0,0x00);		//re-init
 		}
 		else if(gstatus==1)
 		{
-			errc=prg_comm(0x1D0,0,16,0,0,0,0,0,0x55);	//init
+			errc=prg_comm(0x1D0,0,16,0,0,0,0,0,0x45);	//init
 			if(errc > 0) goto ERR_EXIT;
 			printf("JID: %02X%02X%02X%02X\n",memory[3],memory[2],memory[1],memory[0]);
 			errc=prg_comm(0x1be,0,16,0,0,0,0,0,0);		//get MDM status
@@ -351,7 +364,7 @@ S32KSWD_ORUN:
 		else
 		{
 			printf("READ ID\n");
-			errc=prg_comm(0x1D0,0,16,0,0,0,0,0,0);					//init
+			errc=prg_comm(0x1D0,0,16,0,0,0,0,0,0x00);					//init
 			if(errc > 0)
 			{
 				printf("ACK STATUS = %02X\n",memory[0]);
@@ -368,7 +381,7 @@ S32KSWD_ORUN:
 
 		if((j == 1665))
 		{
-			printf("INVALID DEVICE CODE, DEVICE MIGHT BE PROTECTED\n",j,(int)param[10]);
+			printf("INVALID DEVICE CODE, DEVICE MIGHT BE PROTECTED\n");
 			errc=0x50;	
 			goto ERR_EXIT;
 		}
@@ -391,7 +404,7 @@ S32KSWD_ORUN:
 			if(memory[0] & 0x01) printf("++ undef (0)\n");
 
 			errc=prg_comm(0x1D1,0,4,0,0,0x4c,0x80,0x04,0x40);				//READ DEVID
-			//show_data(0,4);
+//			show_data(0,4);
 			if((memory[2] & 0x0f) == 2) printf("++ 4K FlexRAM\n");
 			if((memory[2] & 0x0f) == 3) printf("++ 2K FlexRAM\n");
 			if((memory[2] & 0xF0) != 0) 
@@ -474,7 +487,7 @@ S32KSWD_ORUN:
 		}
 		
 						//transfer loader to ram
-		if((run_ram == 0) && (errc == 0) && ((main_prog == 1) || (main_check == 1) || (data_prog == 1) || (data_check == 1) || 
+		if((run_ram == 0) && (errc == 0) && ((main_prog == 1) || (main_check == 1) || (data_prog == 1) || (data_check == 1) || (main_erase == 1) || (data_erase == 1) ||  
 		(eeprom_prog == 1) || (eeprom_readout == 1) || (eeprom_verify == 1) || (partition > 0)))
 		{
 			printf("TRANSFER LOADER\n");
@@ -482,7 +495,7 @@ S32KSWD_ORUN:
 			{
 				switch(algo_nr)
 				{
-					case 53:	memory[j]=exec_s32k[j]; break;
+					case 76:	memory[j]=exec_s32k1[j]; break;
 					default:	memory[j]=0xff;
 				}
 			}
@@ -538,10 +551,67 @@ S32KSWD_ORUN:
 		}
 
 	}
-	
-	
+		
 	if((run_ram == 0) && (errc == 0) && (dev_start == 0))
 	{
+		if((main_erase == 1) && (errc == 0))
+		{
+			addr=0;
+			maddr=0;
+			if(param[1] > 0x20000)
+				blocks = param[1] / 0x1000;
+			else
+				blocks = param[1] / 0x0800;
+			
+			progress("FLASH ERASE ",blocks,0);
+
+			for(i=0;i<blocks;i++)
+			{
+				//execute erase
+				errc=prg_comm(0x59,0,0,0,0,
+					0x53,
+					(addr >> 16) & 0xff,
+					(addr >> 8) & 0xff,
+					(addr >> 0) & 0xff);
+
+				if(param[1] > 0x20000)
+					addr+=0x1000;
+				else
+					addr+=0x0800;
+
+				progress("FLASH ERASE ",blocks,i+1);
+			}
+			printf("\n");
+		}
+
+
+		if((data_erase == 1) && (errc == 0))
+		{
+			addr=0x800000;
+			maddr=0;
+			blocks = param[3] / 0x0800;
+			
+			progress("DFLASH ERASE ",blocks,0);
+
+			for(i=0;i<blocks;i++)
+			{
+				//execute erase
+				errc=prg_comm(0x59,0,0,0,0,
+					0x53,
+					(addr >> 24) & 0xff,
+					(addr >> 16) & 0xff,
+					(addr >> 8) & 0xff);
+
+				if(param[1] > 0x20000)
+					addr+=0x1000;
+				else
+					addr+=0x0800;
+
+				progress("DFLASH ERASE ",blocks,i+1);
+			}
+			printf("\n");
+		}
+	
 		if((main_prog == 1) && (errc == 0))
 		{
 			addr=param[0];
@@ -551,9 +621,12 @@ S32KSWD_ORUN:
 			if(unsecure==1) memory[0x40c]=0xFE;
 
 			//erase sector 0
-			printf("ERASE FIRST FLASH SECTOR\n");
-			errc=prg_comm(0x59,0,0,0,0,0x53,0,0,0);
-
+			if(main_erase == 0)
+			{
+				printf("ERASE FIRST FLASH SECTOR\n");
+				errc=prg_comm(0x59,0,0,0,0,0x53,0,0,0);
+			}
+			
 			progress("FLASH PROG  ",blocks,0);
 //			printf("ADDR = %08lx  LEN= %d Blocks\n",addr,blocks);
 
@@ -563,7 +636,7 @@ S32KSWD_ORUN:
 				if(must_prog(maddr,max_blocksize) && (errc==0))
 				{
 					//transfer data
-					errc=prg_comm(0xb2,max_blocksize,0,maddr,0,
+					errc=prg_comm(0x1b7,max_blocksize,0,maddr,0,
 						0x04,0x00,0x20,max_blocksize >> 8);
 
 					//execute prog
@@ -657,7 +730,7 @@ S32KSWD_ORUN:
 							max_blocksize >> 8);
 					}
 
-					errc=prg_comm(0xbf,0,2048,0,ROFFSET+maddr,
+					errc=prg_comm(0x1b6,0,2048,0,ROFFSET+maddr,
 						(addr >> 8) & 0xff,
 						(addr >> 16) & 0xff,
 						(addr >> 24) & 0xff,
@@ -717,7 +790,7 @@ S32KSWD_ORUN:
 				if(must_prog(maddr,max_blocksize) && (errc==0))
 				{
 					//transfer data
-					errc=prg_comm(0xb2,max_blocksize,0,maddr,0,
+					errc=prg_comm(0x1b7,max_blocksize,0,maddr,0,
 						0x04,0x00,0x20,max_blocksize >> 8);
 
 					//execute prog
@@ -795,7 +868,7 @@ S32KSWD_ORUN:
 			{
 				if(errc==0)
 				{
-					errc=prg_comm(0xbf,0,2048,0,ROFFSET+maddr,
+					errc=prg_comm(0x1b6,0,2048,0,ROFFSET+maddr,
 						(addr >> 8) & 0xff,
 						(addr >> 16) & 0xff,
 						(addr >> 24) & 0xff,
@@ -817,7 +890,7 @@ S32KSWD_ORUN:
 		if((data_verify == 1) && (errc == 0))
 		{
 			read_block(param[2],dfsize,0);
-			printf("VERIFY DFLASH (%ld KBytes)\n",dfsize/1024);
+			printf("VERIFY DFLASH (%d KBytes)\n",dfsize/1024);
 			addr = param[2];
 			maddr=0;
 			len = dfsize;
@@ -842,7 +915,7 @@ S32KSWD_ORUN:
 			errc=prg_comm(0x59,0,0,0,0,0x5d,0,0,0);
 			if(errc != 0) goto ERR_EXIT;
 			progress("EEPROM PROG ",blocks,0);
-//			printf("ADDR = %08lx  LEN= %d Blocks\n",addr,blocks);
+			printf("ADDR = %08lx  LEN= %d Blocks\n",addr,blocks);
 
 			for(i=0;i<blocks;i++)
 			{
@@ -886,7 +959,7 @@ S32KSWD_ORUN:
 			{
 				if(errc==0)
 				{
-					errc=prg_comm(0xbf,0,2048,0,ROFFSET+maddr,
+					errc=prg_comm(0x1b6,0,2048,0,ROFFSET+maddr,
 						(addr >> 8) & 0xff,
 						(addr >> 16) & 0xff,
 						(addr >> 24) & 0xff,
@@ -908,7 +981,7 @@ S32KSWD_ORUN:
 		if((eeprom_verify == 1) && (errc == 0))
 		{
 			read_block(param[8],dfsize,0);
-			printf("VERIFY EEPROM (%ld KBytes)\n",eesize/1024);
+			printf("VERIFY EEPROM (%d KBytes)\n",eesize/1024);
 			addr = param[8];
 			maddr=0;
 			len = eesize;
@@ -952,7 +1025,7 @@ S32KSWD_ORUN:
 
 		for(i=0;i<blocks;i++)
 		{
-			errc=prg_comm(0xb2,max_blocksize,0,maddr,0,		//write 1.K
+			errc=prg_comm(0x1b7,max_blocksize,0,maddr,0,		//write 2K
 				(addr >> 8) & 0xff,
 				(addr >> 16) & 0xff,
 				0x20,max_blocksize >> 8);
@@ -994,7 +1067,7 @@ ERR_EXIT:
 
 	prg_comm(0x2ef,0,0,0,0,0,0,0,0);	//dev 1
 
-	print_s32kswd_error(errc);
+	print_s32k14swd_error(errc);
 
 	return errc;
 }

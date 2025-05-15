@@ -951,3 +951,619 @@
 	0x0006,				//offset for frequency setting
 	0x0002,				//serie (F1L)
 
+
+	"R7F7010403",
+	26,
+	0x00000000,0x000C0000,		//main flash bank A
+	0x00000000,0x00000000,		//main flash bank B
+	0x01000000,0x00008000,		//extended code flash
+	0xFF200000,0x00008000,		//data flash
+	0xFEDD0000,0x00018000,		//useable RAM
+ 	0x00000000,			//ID
+	0x0803,				//FLMD0-pulses for CSI mode
+	0x0081,				//SOD
+	0x0000,				//lock bit?
+	0x1E00,				//code flash blocks
+	0x03FF,				//data flash blocks (1K blocks * 32)
+	0x0000,
+	0x0006,				//offset for frequency setting
+	0x0002,				//serie (F1L)
+
+	"R7F7010404",
+	26,
+	0x00000000,0x000C0000,		//main flash bank A
+	0x00000000,0x00000000,		//main flash bank B
+	0x01000000,0x00008000,		//extended code flash
+	0xFF200000,0x00008000,		//data flash
+	0xFEDD0000,0x00018000,		//useable RAM
+ 	0x00000000,			//ID
+	0x0803,				//FLMD0-pulses for CSI mode
+	0x0081,				//SOD
+	0x0000,				//lock bit?
+	0x1E00,				//code flash blocks
+	0x03FF,				//data flash blocks (1K blocks * 32)
+	0x0000,
+	0x0006,				//offset for frequency setting
+	0x0002,				//serie (F1L)
+
+	"R7F7010413",
+	26,
+	0x00000000,0x00100000,		//main flash bank A
+	0x00000000,0x00000000,		//main flash bank B
+	0x01000000,0x00008000,		//extended code flash
+	0xFF200000,0x00008000,		//data flash
+	0xFEDD0000,0x00020000,		//useable RAM
+ 	0x00000000,			//ID
+	0x0803,				//FLMD0-pulses for CSI mode
+	0x0081,				//SOD
+	0x0000,				//lock bit?
+	0x2600,				//code flash blocks
+	0x03FF,				//data flash blocks (1K blocks * 32)
+	0x0000,
+	0x0006,				//offset for frequency setting
+	0x0002,				//serie (F1L)
+
+	"R7F7010414",
+	26,
+	0x00000000,0x00100000,		//main flash bank A
+	0x00000000,0x00000000,		//main flash bank B
+	0x01000000,0x00008000,		//extended code flash
+	0xFF200000,0x00008000,		//data flash
+	0xFEDD0000,0x00020000,		//useable RAM
+ 	0x00000000,			//ID
+	0x0803,				//FLMD0-pulses for CSI mode
+	0x0081,				//SOD
+	0x0000,				//lock bit?
+	0x2600,				//code flash blocks
+	0x03FF,				//data flash blocks (1K blocks * 32)
+	0x0000,
+	0x0006,				//offset for frequency setting
+	0x0002,				//serie (F1L)
+
+	"R7F7010423",
+	26,
+	0x00000000,0x000C0000,		//main flash bank A
+	0x00000000,0x00000000,		//main flash bank B
+	0x01000000,0x00008000,		//extended code flash
+	0xFF200000,0x00008000,		//data flash
+	0xFEDD0000,0x00018000,		//useable RAM
+ 	0x00000000,			//ID
+	0x0803,				//FLMD0-pulses for CSI mode
+	0x0081,				//SOD
+	0x0000,				//lock bit?
+	0x1E00,				//code flash blocks
+	0x03FF,				//data flash blocks (1K blocks * 32)
+	0x0000,
+	0x0006,				//offset for frequency setting
+	0x0002,				//serie (F1L)
+
+	"R7F7010424",
+	26,
+	0x00000000,0x000C0000,		//main flash bank A
+	0x00000000,0x00000000,		//main flash bank B
+	0x01000000,0x00008000,		//extended code flash
+	0xFF200000,0x00008000,		//data flash
+	0xFEDD0000,0x00018000,		//useable RAM
+ 	0x00000000,			//ID
+	0x0803,				//FLMD0-pulses for CSI mode
+	0x0081,				//SOD
+	0x0000,				//lock bit?
+	0x1E00,				//code flash blocks
+	0x03FF,				//data flash blocks (1K blocks * 32)
+	0x0000,
+	0x0006,				//offset for frequency setting
+	0x0002,				//serie (F1L)
+
+	"R7F7010433",
+	26,
+	0x00000000,0x00100000,		//main flash bank A
+	0x00000000,0x00000000,		//main flash bank B
+	0x01000000,0x00008000,		//extended code flash
+	0xFF200000,0x00008000,		//data flash
+	0xFEDD0000,0x00020000,		//useable RAM
+ 	0x00000000,			//ID
+	0x0803,				//FLMD0-pulses for CSI mode
+	0x0081,				//SOD
+	0x0000,				//lock bit?
+	0x2600,				//code flash blocks
+	0x03FF,				//data flash blocks (1K blocks * 32)
+	0x0000,
+	0x0006,				//offset for frequency setting
+	0x0002,				//serie (F1L)
+
+	"R7F7010434",
+	26,
+	0x00000000,0x00100000,		//main flash bank A
+	0x00000000,0x00000000,		//main flash bank B
+	0x01000000,0x00008000,		//extended code flash
+	0xFF200000,0x00008000,		//data flash
+	0xFEDD0000,0x00020000,		//useable RAM
+ 	0x00000000,			//ID
+	0x0803,				//FLMD0-pulses for CSI mode
+	0x0081,				//SOD
+	0x0000,				//lock bit?
+	0x2600,				//code flash blocks
+	0x03FF,				//data flash blocks (1K blocks * 32)
+	0x0000,
+	0x0006,				//offset for frequency setting
+	0x0002,				//serie (F1L)
+
+	"R7F7010443",
+	26,
+	0x00000000,0x000C0000,		//main flash bank A
+	0x00000000,0x00000000,		//main flash bank B
+	0x01000000,0x00008000,		//extended code flash
+	0xFF200000,0x00008000,		//data flash
+	0xFEDD0000,0x00018000,		//useable RAM
+ 	0x00000000,			//ID
+	0x0803,				//FLMD0-pulses for CSI mode
+	0x0081,				//SOD
+	0x0000,				//lock bit?
+	0x1E00,				//code flash blocks
+	0x03FF,				//data flash blocks (1K blocks * 32)
+	0x0000,
+	0x0006,				//offset for frequency setting
+	0x0002,				//serie (F1L)
+
+	"R7F7010444",
+	26,
+	0x00000000,0x000C0000,		//main flash bank A
+	0x00000000,0x00000000,		//main flash bank B
+	0x01000000,0x00008000,		//extended code flash
+	0xFF200000,0x00008000,		//data flash
+	0xFEDD0000,0x00018000,		//useable RAM
+ 	0x00000000,			//ID
+	0x0803,				//FLMD0-pulses for CSI mode
+	0x0081,				//SOD
+	0x0000,				//lock bit?
+	0x1E00,				//code flash blocks
+	0x03FF,				//data flash blocks (1K blocks * 32)
+	0x0000,
+	0x0006,				//offset for frequency setting
+	0x0002,				//serie (F1L)
+
+	"R7F7010453",
+	26,
+	0x00000000,0x00100000,		//main flash bank A
+	0x00000000,0x00000000,		//main flash bank B
+	0x01000000,0x00008000,		//extended code flash
+	0xFF200000,0x00008000,		//data flash
+	0xFEDD0000,0x00020000,		//useable RAM
+ 	0x00000000,			//ID
+	0x0803,				//FLMD0-pulses for CSI mode
+	0x0081,				//SOD
+	0x0000,				//lock bit?
+	0x2600,				//code flash blocks
+	0x03FF,				//data flash blocks (1K blocks * 32)
+	0x0000,
+	0x0006,				//offset for frequency setting
+	0x0002,				//serie (F1L)
+
+	"R7F7010454",
+	26,
+	0x00000000,0x00100000,		//main flash bank A
+	0x00000000,0x00000000,		//main flash bank B
+	0x01000000,0x00008000,		//extended code flash
+	0xFF200000,0x00008000,		//data flash
+	0xFEDD0000,0x00020000,		//useable RAM
+ 	0x00000000,			//ID
+	0x0803,				//FLMD0-pulses for CSI mode
+	0x0081,				//SOD
+	0x0000,				//lock bit?
+	0x2600,				//code flash blocks
+	0x03FF,				//data flash blocks (1K blocks * 32)
+	0x0000,
+	0x0006,				//offset for frequency setting
+	0x0002,				//serie (F1L)
+
+
+	"R7F7010463",
+	26,
+	0x00000000,0x000C0000,		//main flash bank A
+	0x00000000,0x00000000,		//main flash bank B
+	0x01000000,0x00008000,		//extended code flash
+	0xFF200000,0x00008000,		//data flash
+	0xFEDD0000,0x00018000,		//useable RAM
+ 	0x00000000,			//ID
+	0x0803,				//FLMD0-pulses for CSI mode
+	0x0081,				//SOD
+	0x0000,				//lock bit?
+	0x1E00,				//code flash blocks
+	0x03FF,				//data flash blocks (1K blocks * 32)
+	0x0000,
+	0x0006,				//offset for frequency setting
+	0x0002,				//serie (F1L)
+
+	"R7F7010464",
+	26,
+	0x00000000,0x000C0000,		//main flash bank A
+	0x00000000,0x00000000,		//main flash bank B
+	0x01000000,0x00008000,		//extended code flash
+	0xFF200000,0x00008000,		//data flash
+	0xFEDD0000,0x00018000,		//useable RAM
+ 	0x00000000,			//ID
+	0x0803,				//FLMD0-pulses for CSI mode
+	0x0081,				//SOD
+	0x0000,				//lock bit?
+	0x1E00,				//code flash blocks
+	0x03FF,				//data flash blocks (1K blocks * 32)
+	0x0000,
+	0x0006,				//offset for frequency setting
+	0x0002,				//serie (F1L)
+
+	"R7F7010473",
+	26,
+	0x00000000,0x00100000,		//main flash bank A
+	0x00000000,0x00000000,		//main flash bank B
+	0x01000000,0x00008000,		//extended code flash
+	0xFF200000,0x00008000,		//data flash
+	0xFEDD0000,0x00020000,		//useable RAM
+ 	0x00000000,			//ID
+	0x0803,				//FLMD0-pulses for CSI mode
+	0x0081,				//SOD
+	0x0000,				//lock bit?
+	0x2600,				//code flash blocks
+	0x03FF,				//data flash blocks (1K blocks * 32)
+	0x0000,
+	0x0006,				//offset for frequency setting
+	0x0002,				//serie (F1L)
+
+	"R7F7010474",
+	26,
+	0x00000000,0x00100000,		//main flash bank A
+	0x00000000,0x00000000,		//main flash bank B
+	0x01000000,0x00008000,		//extended code flash
+	0xFF200000,0x00008000,		//data flash
+	0xFEDD0000,0x00020000,		//useable RAM
+ 	0x00000000,			//ID
+	0x0803,				//FLMD0-pulses for CSI mode
+	0x0081,				//SOD
+	0x0000,				//lock bit?
+	0x2600,				//code flash blocks
+	0x03FF,				//data flash blocks (1K blocks * 32)
+	0x0000,
+	0x0006,				//offset for frequency setting
+	0x0002,				//serie (F1L)
+
+
+	"R7F7010483",
+	26,
+	0x00000000,0x00180000,		//main flash bank A
+	0x00000000,0x00000000,		//main flash bank B
+	0x01000000,0x00008000,		//extended code flash
+	0xFF200000,0x00008000,		//data flash
+	0xFEDD0000,0x00028000,		//useable RAM
+ 	0x00000000,			//ID
+	0x0803,				//FLMD0-pulses for CSI mode
+	0x0081,				//SOD
+	0x0000,				//lock bit?
+	0x3600,				//code flash blocks
+	0x03FF,				//data flash blocks (1K blocks * 32)
+	0x0000,
+	0x0006,				//offset for frequency setting
+	0x0002,				//serie (F1L)
+
+	"R7F7010484",
+	26,
+	0x00000000,0x00180000,		//main flash bank A
+	0x00000000,0x00000000,		//main flash bank B
+	0x01000000,0x00008000,		//extended code flash
+	0xFF200000,0x00008000,		//data flash
+	0xFEDD0000,0x00028000,		//useable RAM
+ 	0x00000000,			//ID
+	0x0803,				//FLMD0-pulses for CSI mode
+	0x0081,				//SOD
+	0x0000,				//lock bit?
+	0x3600,				//code flash blocks
+	0x03FF,				//data flash blocks (1K blocks * 32)
+	0x0000,
+	0x0006,				//offset for frequency setting
+	0x0002,				//serie (F1L)
+
+	"R7F7010493",
+	26,
+	0x00000000,0x00200000,		//main flash bank A
+	0x00000000,0x00000000,		//main flash bank B
+	0x01000000,0x00008000,		//extended code flash
+	0xFF200000,0x00008000,		//data flash
+	0xFEDD0000,0x00028000,		//useable RAM
+ 	0x00000000,			//ID
+	0x0803,				//FLMD0-pulses for CSI mode
+	0x0081,				//SOD
+	0x0000,				//lock bit?
+	0x4600,				//code flash blocks
+	0x03FF,				//data flash blocks (1K blocks * 32)
+	0x0000,
+	0x0006,				//offset for frequency setting
+	0x0002,				//serie (F1L)
+
+	"R7F7010494",
+	26,
+	0x00000000,0x00200000,		//main flash bank A
+	0x00000000,0x00000000,		//main flash bank B
+	0x01000000,0x00008000,		//extended code flash
+	0xFF200000,0x00008000,		//data flash
+	0xFEDD0000,0x00028000,		//useable RAM
+ 	0x00000000,			//ID
+	0x0803,				//FLMD0-pulses for CSI mode
+	0x0081,				//SOD
+	0x0000,				//lock bit?
+	0x4600,				//code flash blocks
+	0x03FF,				//data flash blocks (1K blocks * 32)
+	0x0000,
+	0x0006,				//offset for frequency setting
+	0x0002,				//serie (F1L)
+
+
+	"R7F7010503",
+	26,
+	0x00000000,0x000C0000,		//main flash bank A
+	0x00000000,0x00000000,		//main flash bank B
+	0x01000000,0x00008000,		//extended code flash
+	0xFF200000,0x00008000,		//data flash
+	0xFEDD0000,0x00018000,		//useable RAM
+ 	0x00000000,			//ID
+	0x0803,				//FLMD0-pulses for CSI mode
+	0x0081,				//SOD
+	0x0000,				//lock bit?
+	0x1E00,				//code flash blocks
+	0x03FF,				//data flash blocks (1K blocks * 32)
+	0x0000,
+	0x0006,				//offset for frequency setting
+	0x0002,				//serie (F1L)
+
+	"R7F7010504",
+	26,
+	0x00000000,0x000C0000,		//main flash bank A
+	0x00000000,0x00000000,		//main flash bank B
+	0x01000000,0x00008000,		//extended code flash
+	0xFF200000,0x00008000,		//data flash
+	0xFEDD0000,0x00018000,		//useable RAM
+ 	0x00000000,			//ID
+	0x0803,				//FLMD0-pulses for CSI mode
+	0x0081,				//SOD
+	0x0000,				//lock bit?
+	0x1E00,				//code flash blocks
+	0x03FF,				//data flash blocks (1K blocks * 32)
+	0x0000,
+	0x0006,				//offset for frequency setting
+	0x0002,				//serie (F1L)
+
+	"R7F7010513",
+	26,
+	0x00000000,0x00100000,		//main flash bank A
+	0x00000000,0x00000000,		//main flash bank B
+	0x01000000,0x00008000,		//extended code flash
+	0xFF200000,0x00008000,		//data flash
+	0xFEDD0000,0x00020000,		//useable RAM
+ 	0x00000000,			//ID
+	0x0803,				//FLMD0-pulses for CSI mode
+	0x0081,				//SOD
+	0x0000,				//lock bit?
+	0x2600,				//code flash blocks
+	0x03FF,				//data flash blocks (1K blocks * 32)
+	0x0000,
+	0x0006,				//offset for frequency setting
+	0x0002,				//serie (F1L)
+
+	"R7F7010514",
+	26,
+	0x00000000,0x00100000,		//main flash bank A
+	0x00000000,0x00000000,		//main flash bank B
+	0x01000000,0x00008000,		//extended code flash
+	0xFF200000,0x00008000,		//data flash
+	0xFEDD0000,0x00020000,		//useable RAM
+ 	0x00000000,			//ID
+	0x0803,				//FLMD0-pulses for CSI mode
+	0x0081,				//SOD
+	0x0000,				//lock bit?
+	0x2600,				//code flash blocks
+	0x03FF,				//data flash blocks (1K blocks * 32)
+	0x0000,
+	0x0006,				//offset for frequency setting
+	0x0002,				//serie (F1L)
+
+
+	"R7F7010523",
+	26,
+	0x00000000,0x00180000,		//main flash bank A
+	0x00000000,0x00000000,		//main flash bank B
+	0x01000000,0x00008000,		//extended code flash
+	0xFF200000,0x00008000,		//data flash
+	0xFEDD0000,0x00028000,		//useable RAM
+ 	0x00000000,			//ID
+	0x0803,				//FLMD0-pulses for CSI mode
+	0x0081,				//SOD
+	0x0000,				//lock bit?
+	0x3600,				//code flash blocks
+	0x03FF,				//data flash blocks (1K blocks * 32)
+	0x0000,
+	0x0006,				//offset for frequency setting
+	0x0002,				//serie (F1L)
+
+	"R7F7010524",
+	26,
+	0x00000000,0x00180000,		//main flash bank A
+	0x00000000,0x00000000,		//main flash bank B
+	0x01000000,0x00008000,		//extended code flash
+	0xFF200000,0x00008000,		//data flash
+	0xFEDD0000,0x00028000,		//useable RAM
+ 	0x00000000,			//ID
+	0x0803,				//FLMD0-pulses for CSI mode
+	0x0081,				//SOD
+	0x0000,				//lock bit?
+	0x3600,				//code flash blocks
+	0x03FF,				//data flash blocks (1K blocks * 32)
+	0x0000,
+	0x0006,				//offset for frequency setting
+	0x0002,				//serie (F1L)
+
+	"R7F7010533",
+	26,
+	0x00000000,0x00200000,		//main flash bank A
+	0x00000000,0x00000000,		//main flash bank B
+	0x01000000,0x00008000,		//extended code flash
+	0xFF200000,0x00008000,		//data flash
+	0xFEDD0000,0x00028000,		//useable RAM
+ 	0x00000000,			//ID
+	0x0803,				//FLMD0-pulses for CSI mode
+	0x0081,				//SOD
+	0x0000,				//lock bit?
+	0x4600,				//code flash blocks
+	0x03FF,				//data flash blocks (1K blocks * 32)
+	0x0000,
+	0x0006,				//offset for frequency setting
+	0x0002,				//serie (F1L)
+
+	"R7F7010534",
+	26,
+	0x00000000,0x00200000,		//main flash bank A
+	0x00000000,0x00000000,		//main flash bank B
+	0x01000000,0x00008000,		//extended code flash
+	0xFF200000,0x00008000,		//data flash
+	0xFEDD0000,0x00028000,		//useable RAM
+ 	0x00000000,			//ID
+	0x0803,				//FLMD0-pulses for CSI mode
+	0x0081,				//SOD
+	0x0000,				//lock bit?
+	0x4600,				//code flash blocks
+	0x03FF,				//data flash blocks (1K blocks * 32)
+	0x0000,
+	0x0006,				//offset for frequency setting
+	0x0002,				//serie (F1L)
+
+	"R7F7010543",
+	26,
+	0x00000000,0x00180000,		//main flash bank A
+	0x00000000,0x00000000,		//main flash bank B
+	0x01000000,0x00008000,		//extended code flash
+	0xFF200000,0x00010000,		//data flash
+	0xFEDD0000,0x00028000,		//useable RAM
+ 	0x00000000,			//ID
+	0x0803,				//FLMD0-pulses for CSI mode
+	0x0081,				//SOD
+	0x0000,				//lock bit?
+	0x3600,				//code flash blocks
+	0x07FF,				//data flash blocks (1K blocks * 32)
+	0x0000,
+	0x0006,				//offset for frequency setting
+	0x0002,				//serie (F1L)
+
+	"R7F7010544",
+	26,
+	0x00000000,0x00180000,		//main flash bank A
+	0x00000000,0x00000000,		//main flash bank B
+	0x01000000,0x00008000,		//extended code flash
+	0xFF200000,0x00010000,		//data flash
+	0xFEDD0000,0x00028000,		//useable RAM
+ 	0x00000000,			//ID
+	0x0803,				//FLMD0-pulses for CSI mode
+	0x0081,				//SOD
+	0x0000,				//lock bit?
+	0x3600,				//code flash blocks
+	0x07FF,				//data flash blocks (1K blocks * 32)
+	0x0000,
+	0x0006,				//offset for frequency setting
+	0x0002,				//serie (F1L)
+
+	"R7F7010553",
+	26,
+	0x00000000,0x00200000,		//main flash bank A
+	0x00000000,0x00000000,		//main flash bank B
+	0x01000000,0x00008000,		//extended code flash
+	0xFF200000,0x00010000,		//data flash
+	0xFEDD0000,0x00028000,		//useable RAM
+ 	0x00000000,			//ID
+	0x0803,				//FLMD0-pulses for CSI mode
+	0x0081,				//SOD
+	0x0000,				//lock bit?
+	0x4600,				//code flash blocks
+	0x07FF,				//data flash blocks (1K blocks * 32)
+	0x0000,
+	0x0006,				//offset for frequency setting
+	0x0002,				//serie (F1L)
+
+	"R7F7010554",
+	26,
+	0x00000000,0x00200000,		//main flash bank A
+	0x00000000,0x00000000,		//main flash bank B
+	0x01000000,0x00008000,		//extended code flash
+	0xFF200000,0x00010000,		//data flash
+	0xFEDD0000,0x00028000,		//useable RAM
+ 	0x00000000,			//ID
+	0x0803,				//FLMD0-pulses for CSI mode
+	0x0081,				//SOD
+	0x0000,				//lock bit?
+	0x4600,				//code flash blocks
+	0x07FF,				//data flash blocks (1K blocks * 32)
+	0x0000,
+	0x0006,				//offset for frequency setting
+	0x0002,				//serie (F1L)
+
+	"R7F7010563",
+	26,
+	0x00000000,0x00180000,		//main flash bank A
+	0x00000000,0x00000000,		//main flash bank B
+	0x01000000,0x00008000,		//extended code flash
+	0xFF200000,0x00010000,		//data flash
+	0xFEDD0000,0x00028000,		//useable RAM
+ 	0x00000000,			//ID
+	0x0803,				//FLMD0-pulses for CSI mode
+	0x0081,				//SOD
+	0x0000,				//lock bit?
+	0x3600,				//code flash blocks
+	0x07FF,				//data flash blocks (1K blocks * 32)
+	0x0000,
+	0x0006,				//offset for frequency setting
+	0x0002,				//serie (F1L)
+
+	"R7F7010564",
+	26,
+	0x00000000,0x00180000,		//main flash bank A
+	0x00000000,0x00000000,		//main flash bank B
+	0x01000000,0x00008000,		//extended code flash
+	0xFF200000,0x00010000,		//data flash
+	0xFEDD0000,0x00028000,		//useable RAM
+ 	0x00000000,			//ID
+	0x0803,				//FLMD0-pulses for CSI mode
+	0x0081,				//SOD
+	0x0000,				//lock bit?
+	0x3600,				//code flash blocks
+	0x07FF,				//data flash blocks (1K blocks * 32)
+	0x0000,
+	0x0006,				//offset for frequency setting
+	0x0002,				//serie (F1L)
+
+	"R7F7010573",
+	26,
+	0x00000000,0x00200000,		//main flash bank A
+	0x00000000,0x00000000,		//main flash bank B
+	0x01000000,0x00008000,		//extended code flash
+	0xFF200000,0x00010000,		//data flash
+	0xFEDD0000,0x00028000,		//useable RAM
+ 	0x00000000,			//ID
+	0x0803,				//FLMD0-pulses for CSI mode
+	0x0081,				//SOD
+	0x0000,				//lock bit?
+	0x4600,				//code flash blocks
+	0x07FF,				//data flash blocks (1K blocks * 32)
+	0x0000,
+	0x0006,				//offset for frequency setting
+	0x0002,				//serie (F1L)
+
+	"R7F7010574",
+	26,
+	0x00000000,0x00200000,		//main flash bank A
+	0x00000000,0x00000000,		//main flash bank B
+	0x01000000,0x00008000,		//extended code flash
+	0xFF200000,0x00010000,		//data flash
+	0xFEDD0000,0x00028000,		//useable RAM
+ 	0x00000000,			//ID
+	0x0803,				//FLMD0-pulses for CSI mode
+	0x0081,				//SOD
+	0x0000,				//lock bit?
+	0x4600,				//code flash blocks
+	0x07FF,				//data flash blocks (1K blocks * 32)
+	0x0000,
+	0x0006,				//offset for frequency setting
+	0x0002,				//serie (F1L)

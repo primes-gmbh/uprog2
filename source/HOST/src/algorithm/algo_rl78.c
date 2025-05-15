@@ -238,19 +238,36 @@ ONLY_DD:
 //		printf("RD= %02X %02X %02X %02X %02X \n",memory[0],memory[1],memory[2],memory[3],memory[4]);
 	}
 	
-
 	//erase
 	if ((errc == 0) && (main_erase == 1))
 	{
 		blocks=param[1] / 1024;
 		addr=param[0];
 		printf("ERASE %d BLOCKS OF MAIN FLASH\n",blocks);
+
+
+		progress("MAIN ERASE   ",blocks,0);
+		
+		for(tblock=0;tblock<blocks;tblock++)
+		{
+			errc=prg_comm(0x6a,0,7,0,0,(addr >> 8) & 0xff,(addr >> 16) & 0xff,1,0);	//program
+
+			if(errc!=0) 
+			{
+				printf("RESP = %02X %02X %02X %02X %02X\n",memory[2],memory[3],memory[4],memory[5],memory[6]);		
+			}
+			addr+=1024;
+			progress("MAIN ERASE   ",blocks,tblock+1);
+		}
+		printf("\n");
+
+/*
 		errc=prg_comm(0x6a,0,7,0,0,(addr >> 8) & 0xff,(addr >> 16) & 0xff,blocks,0);	//program
-//		printf("ADDR= %08lx\n",addr);
 		if(errc != 0)
 		{
-			printf("RESP(%02X) = %02X %02X %02X %02X %02X\n",errc,memory[2],memory[3],memory[4],memory[5],memory[6]);
+			printf("%d: RESP(%02X) = %02X %02X %02X %02X %02X\n",tblock,errc,memory[2],memory[3],memory[4],memory[5],memory[6]);
 		}
+*/
 	}
 
 	//erase
@@ -341,9 +358,13 @@ ONLY_DD:
 		blocks=param[3] >> 10;
 		addr=param[2];
 		printf("ERASE %d BLOCKS OF DATA FLASH\n",blocks);
-		errc=prg_comm(0x6a,0,0,0,0,(addr >> 8) & 0xff,(addr >> 16) & 0xff,blocks,0);	//program
-	}
+		errc=prg_comm(0x6a,0,10,0,0,(addr >> 8) & 0xff,(addr >> 16) & 0xff,blocks,0);	//program
+		if(errc != 0)
+		{
+			printf("RESP(%02X) = %02X %02X %02X %02X %02X\n",errc,memory[2],memory[3],memory[4],memory[5],memory[6]);
+		}
 
+	}
 
 	//blankcheck main
 	if ((errc == 0) && (main_bcheck == 1))
@@ -483,6 +504,8 @@ ONLY_DD:
 		addr=param[0];
 		blocks=param[1]/bsize;
 		maddr=0;
+
+//		waitkey();
 
 		progress("MAIN VERIFY ",blocks,0);
 		for(tblock=0;tblock<blocks;tblock++)
@@ -692,7 +715,7 @@ RL78_END:
 		if(errc == 0) errc=prg_comm(0x0e,0,0,0,0,0,0,0,0);			//init
 		maddr=0;
 		blocks=param[1]/bsize;
-		
+				
 		progress("READ DUMP   ",blocks,0);
 		for(j=0;j<blocks;j++)
 		{

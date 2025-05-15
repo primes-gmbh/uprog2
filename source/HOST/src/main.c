@@ -51,7 +51,26 @@ int main(int argc, char *argv[])
 	use_vanilla_pid=0;
 	force_exit=0;
 	is_error=0;
+	file_err=0;
 	jj=0;
+
+	char logtime[100];
+	char *logtime_ptr;
+	time_t current_time;
+	char *time_string;
+	char *time_string_ptr;
+	
+	current_time = time(NULL);
+	time_string = ctime(&current_time);
+	time_string_ptr=time_string;
+	logtime_ptr=logtime;
+	while(*time_string_ptr > 31)
+	{
+		*logtime_ptr++ = *time_string_ptr++; 
+	}
+	*logtime_ptr = 0;
+//	printf("TIME=<%s>\n",time_string);
+	logdata[0]=0;
 	
 	do
 	{
@@ -75,7 +94,7 @@ int main(int argc, char *argv[])
 	printf("\n");
 	printf("#################################################################################\n");
 	printf("#                                                                               #\n");
-	printf("#  UNI-Programmer UPROG2 V1.42                                                  #\n");
+	printf("#  UNI-Programmer UPROG2 V1.43                                                  #\n");
 	printf("#                                                                               #\n");
 	printf("#  (c) 2012-2022 Joerg Wolfram                                                  #\n");
 	printf("#                                                                               #\n");
@@ -94,7 +113,13 @@ int main(int argc, char *argv[])
 		return 1;
 	}
 
-	if(pids > 2)
+	if((pids > 2) && (interface_type != 1))
+	{
+		printf("\nuprog2 is already started. Cannot start another instance.\n\n");
+		return 1;
+	}
+
+	if((pids > 2) && (interface_type == 1))
 	{
 		printf("\nuprog2 is already started. Cannot start another instance.\n\n");
 		return 1;
@@ -113,9 +138,12 @@ int main(int argc, char *argv[])
 	}
 
 	interface_type=0;
+
+
 		
 	if((strncmp(argv[1],"KILL",4) != 0) && (force_exit == 0))
 	{
+		//printf("\n## NUMBER OF PIDs = %d\n",pids);					
 		if(pids == 1)
 		{
 
@@ -139,7 +167,7 @@ int main(int argc, char *argv[])
 			if(check_usb(use_vanilla_pid) == 0)
 			{ 
 				interface_type=9;
-				printf("FOUND\n\n");
+				printf("FOUND, USING DIRECT MODE\n\n");
 			}
 			else
 			{
@@ -458,6 +486,15 @@ int main(int argc, char *argv[])
 	
 	}
 
+	loglevel=0;
+	if(find_cmd("l1")) loglevel=1;
+	if(find_cmd("l2")) loglevel=2;
+	if(find_cmd("l3")) loglevel=3;
+	if(find_cmd("l4")) loglevel=4;
+	if(loglevel > 0) printf("\n## SET LOGLEVEL TO %d\n",loglevel);					
+
+
+
 	//###############################################################################
 	//# default UPROG2								#
 	//###############################################################################	
@@ -512,12 +549,12 @@ int main(int argc, char *argv[])
 			case 50:	errcode=prog_mlx316();		break;
 			case 51:	errcode=prog_cc2640();		break;
 			case 52:	errcode=prog_stm32l4();		break;	//l4
-			case 53:	errcode=prog_s32kswd();		break;	//s32k
+			case 53:	errcode=prog_s32k11swd();	break;	//s32k11x
 			case 54:	errcode=prog_ppcjtag3();	break;
 			case 55:	errcode=prog_pic16c();		break;	//pic16 new
 			case 56:	errcode=prog_kea64swd();	break;	//KEA64
 			case 57:	errcode=prog_pic16d();		break;	// mod EEPROM
-
+			case 58:	errcode=prog_rf430();		break;
 			case 59:	errcode=prog_sici();		break;
 			case 60:	errcode=prog_avr0();		break;
 			case 61:	errcode=prog_at89s8252();	break;
@@ -530,8 +567,13 @@ int main(int argc, char *argv[])
 //			case 68:	errcode=prog_samdswd();		break;	//ATSAMD over SWD
 			case 69:	errcode=read_veml3328();	break;
 			case 70:	errcode=prog_pic16e();		break;	//pic16 new + EEPROM
-
+//			case 71:	errcode=prog_mb91();		break;	//MB51...
 			case 72:	errcode=prog_ra6();		break;	//renesas RA6M1/M2/T1
+			case 73:	errcode=prog_at24rf08();	break;	//AT24RF08
+			case 74:	errcode=xspi();			break;	//AVR SPI-extension
+			case 75:	errcode=prog_s32k3swd();	break;	//s32k3xx
+			case 76:	errcode=prog_s32k14swd();	break;	//s32k14x
+			case 77:	errcode=prog_pic18b();		break;	//pic18 new
 
 			case 189:	errcode=prog_dgen();		break;
 			case 197:	errcode=prog_fgen();		break;
@@ -543,11 +585,11 @@ int main(int argc, char *argv[])
 			case 199:	update();			//update
 					break;
 
-			case 210:	errcode=s19tohex();		//dataset converter mode
+			case 210:	errcode=hex2hex();		//dataset converter mode
 					break;
 
-			default:
-			printf("WRONG ALGORITHM\n");
+			default:	printf("WRONG ALGORITHM\n");
+					errcode = 0xFD;
 		}
 		
 	}
@@ -567,14 +609,14 @@ int main(int argc, char *argv[])
 					shm[0]=0x2f;
 					break;
 
-			case 210:	errcode=s19tohex();		//dataset converter mode
+			case 210:	errcode=hex2hex();		//dataset converter mode
 					break;
 
 			case 199:	update_par();		//update
 					break;
 
-			default:
-			printf("WRONG ALGORITHM\n");
+			default:	printf("WRONG ALGORITHM\n");
+					errcode = 0xFD;
 		}
 		
 	}
@@ -598,9 +640,44 @@ int main(int argc, char *argv[])
 
 	if(interface_type == 9) close_usb(); 
 
-
+	if(loglevel > 0)
+	{
+		ldatei=fopen("uprog2.log","a");
+		if(ldatei != NULL)
+		{
+				fprintf(ldatei,"-----------------------------------------------------------------------------------\n");
+				fprintf(ldatei,"- UPROG2 V1.43 AT %s\n",logtime);
+				fprintf(ldatei,"- CMD = <");
+				for(ii=0;ii<argc;ii++)
+				{ 
+					if(ii > 0) fprintf(ldatei," ");
+					fprintf(ldatei,"%s",argv[ii]);
+				}
+				fprintf(ldatei,">\n");
+				fprintf(ldatei,logdata);
+				if(errcode != 0)
+				{
+					fprintf(ldatei,"! FAILED WITH CODE 0x%02X\n",errcode);				
+				}
+				else if(file_err != 0)
+				{
+					fprintf(ldatei,"! FAILED WITH FILE ERROR\n");				
+				}
+				else
+				{
+					fprintf(ldatei,"* PASSED\n");				
+				}
+				fprintf(ldatei,"\n");
+		
+				fclose(ldatei);
+		}
+		else
+		{
+			printf("!!! CANNOT WRITE TO LOG FILE (uprog2.log) !!!\n");
+		}
+	}
 
 	free(memory);
 
-	return errcode;
+	return (errcode | file_err);
 }

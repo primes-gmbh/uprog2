@@ -58,3 +58,8 @@ int check_00(long,int);
 void debug_avrjtag_t1(void);
 
 void paraprog_view(int);
+
+void addlog1(char *);
+void addlog2(char *);
+void addlog3(char *);
+void addlog4(char *);
