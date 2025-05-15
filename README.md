@@ -15,14 +15,18 @@ Currently the following devices are supported for programming
 * Atmel AVR (SPI)
 * Atmel ATxmega (PDI)
 * Cypress PSOC4 (SWD)
+* Infineon TLE986x/TLE987x
 * Microchip PIC10xx/PIC12xx/PIC16xx
 * Microchip PIC18xx
 * Microchip dsPIC33xx
+* Microchip PIC18FxxQ41/PIC18FxxQ43
 * NXP/Freescale MPC56xx (BAM)
 * NXP/Freescale HCS08
 * NXP/Freescale HCS12(X)
 * NXP/Freescale S32K
+* NXP S32K3xx
 * NXP/Freescale K9EA
+* Renesas RA6T/RA6M
 * Renesas R8C
 * Renesas 78K0R
 * Renesas RL78
@@ -36,6 +40,7 @@ Currently the following devices are supported for programming
 * TI MSP430 (SBW)
 * TI CC2540, CC2541
 * TI CC2640
+* TI RF430
 * XILINX XC9500/XL
 * Atmel Dataflash (AT45DBxx)
 * SPI-Flash (25xx)
@@ -51,15 +56,15 @@ The following parts describe building both parts on a RaspberryPi 3B+ running ra
 
 ### Host
 
-    apt-get install libusb-1.0-0 libusb-1.0-0-dev libftdi1 libftdi1-dev
-    git clone https://github.com/5inf/uprog2.git
+    apt-get install libusb-1.0-0 libusb-1.0-0-dev libftdi1 libftdi1-dev libbluetooth-dev
+    git clone https://github.com/primes-gmbh/uprog2.git
     cd uprog2
     cd source/HOST
     make clean
-    make 
+    make
     sudo make install
     /usr/local/bin/uprog2
-    
+
 #### Access to the uprog USB adapter as non root
 
 if the uprog in its default configuration (vid0403, pid:0601) is plugged into the RaspberryPi the usbcore automatically loads the usbserial kernel module, which in turn automatically loads the ftdi_sio module. This creates a character device entry as /dev/ttyUSBx, where x is the next free number. (There is probably already udev and the systemd hwdb involved somewhere.) By default only the user root and the groupt dialout has access to this device. So to run uprog2 and get access to the hardware we either need to be root or belong to the group dialout.
@@ -67,9 +72,9 @@ if the uprog in its default configuration (vid0403, pid:0601) is plugged into th
 Another way to get access to to the hardware is by adding to following udev rule to the udev configuration, e.g. via /etc/udev/rules.d/uprog2.rules
 
     ATTRS{idVendor}=="0403", ATTRS{idProduct}=="6001", MODE="0666"
-    
+
  More options to filter for the uprog2 serial port in the udev rule could be used from the following list. These might come handy later.
- 
+
     ATTRS{manufacturer}=="<your device name here>"
     ATTRS{product}=="<your product name here>"
     ATTRS{serial}=="<your device serial number here>"
@@ -79,30 +84,30 @@ Another way to get access to to the hardware is by adding to following udev rule
 
 ### Adapter device
 
-To build the adapter device we need an assembler. 
+To build the adapter device we need an assembler.
 There are two options, gcc-avr contains avr-as as an assembler, but it does not understand the dialect used by uprog2.
 
 avra is an assembler which would be capable of assembling uprog2.
 As the version in Debian is currently to old (1.3.0) to know about the mega644 chip.
 Support is only included since https://github.com/Ro5bert/avra/pull/3.
-Thus we need to get the current version ourself from the official repository.
+Thus we need to get the current version ourself from the forked repository.
 
     cd ~
-    git clone https://github.com/Ro5bert/avra.git
+    git clone https://github.com/primes-gmbh/avra
     cd avra
     make
     sudo make install
     which avra
-    
-Also, as uprog2 does include some "non public devices", we need to edit main.asm to uncomment (with a semicolon) the lines referencing files inside the folder devices_no_public/.
+
+Also, as uprog2 does include some "non public devices", we need to edit main.asm to comment out (with a semicolon) the lines referencing files inside the folder devices_no_public/.
 
 We can then build the binary for the adapter device with
 
     cd ~/uprog2/source/PROG
-    ./asemble
+    ./assemble
 
 This successfully builds the birnary to be programmed into the hardware adapter AVR644(P).
-    
+
 #### Initial adapter device programming
 
 This is a chicken and egg situation. A programmer is required to initially program the programmer. Subsequent firmware updates are (mostly) handled automatically by uprog.
@@ -113,17 +118,17 @@ With a programmer programming can be done using e.g. AVRdude (https://www.nongnu
 
     sudo apt-get install avrdude
     sudo avrdude -c avrisp2 -p atmega644p -U hfuse:w:0xD4:m -U lfuse:w:0xE6:m -U efuse:w:0xFF:m -U flash:w:./binary/PROG/main.hex
-    
+
 Note: As of version 1.42 and possibly earlier versions too, the documentation on the uprog2 website states the wrong fuse values.
 The fuse values used here have been comunicated by Jörg to me via mail and have been confirmed to work with 1.42.
-    
- If at least one uprog is already available uprog2 itsel can be used to program the next ones.
- 
+
+ If at least one uprog is already available uprog2 itself can be used to program the next ones.
+
     uprog2 ATMEGA644PA -5vlslf 0xE6
     uprog2 ATMEGA644PA -5vlshf 0xD4
     uprog2 ATMEGA644PA -5vlsef 0xFF
     uprog2 ATMEGA644PA -5veapmve main.hex
-       
+
 ##### Setting USB device strings on the FTDI USB Serial interface
 
 ! WARNING: This changes the configuration of the FTDI chip on your uprog2 board. It has been tested and is working properly in a setup consisting of multiple uprog2 programmers. However: Use with caution!
@@ -138,7 +143,7 @@ In recent versions (e.g. 1.42) uprog checks for vid=0x0403,pid=0x6661 (which Jö
 
 To adjust the USB device strings (manufacturer name and device name) the FT_PROG utility from FTDI (FT_PROG 3.3.88.402 - EEPROM Programming Utility, https://www.ftdichip.com/Support/Utilities.htm#FT_PROG) is needed. Unfortunately this utility is Windows only.
 
-There are two Linux tools called ftdi-eeprom. One available from the Debian package repository, which seems to be written by Intra2net AG, the maintainer of libftdi. A second one written by Evan Nemerson (https://github.com/nemequ/ftdi-eeprom). Both tools can change the desired settings in the FTDI chip. 
+There are two Linux tools called ftdi-eeprom. One available from the Debian package repository, which seems to be written by Intra2net AG, the maintainer of libftdi. A second one written by Evan Nemerson (https://github.com/nemequ/ftdi-eeprom). Both tools can change the desired settings in the FTDI chip.
 
 Below is the description for the ftdi-eeprom tool packaged in Debian. More information can be found using man ftdi-eeprom.
 
@@ -150,7 +155,7 @@ Below is the description for the ftdi-eeprom tool packaged in Debian. More infor
     sudo ftdi_eeprom --device i:0x0403:0x6001 --build-eeprom ftdi.conf
     sudo ftdi_eeprom --device i:0x0403:0x6001 --flash-eeprom ftdi.conf
     sudo insmod ftdi_sio
-   
+
 After this your FTDI device has its manufacturer string changed to 5inf and the device name changed to USBPROG2 (and currently the serial number set to 0815 as well as some other settings are also modified. Save the eeprom config read with --read-eeprom for restoring later and use with caution!).
 
 After changing the strings any udev rules eventually in place might also need to be adapted (see above).
