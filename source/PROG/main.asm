@@ -27,8 +27,8 @@
 .def		const_0		= r2
 .def		const_1		= r3
 
-.equ		sysver_high	= 0x00	
-.equ		sysver_low	= 0x14
+.equ		sysver_high	= 0x00
+.equ		sysver_low	= 0x15
 
 .equ		buffer		= 0x100		;data buffer
 .equ		stack		= 0x10ff	;system/return stack
@@ -95,6 +95,7 @@
 .include	"modules/i2c.asm"
 .include	"modules/jtag.asm"
 .include	"modules/freq_gen.asm"
+.include	"modules/xspi.asm"
 
 ;device modules
 .include	"devices/s08.asm"
@@ -145,6 +146,7 @@
 .include	"modules/generics.asm"
 .include	"devices/avrjtag.asm"
 .include	"devices/mb91.asm"
+.include	"devices/pic3.asm"
 .include	"tables/st7_code.inc"
 
 ;tables
@@ -156,4 +158,3 @@
 bootloader:
 .include	"system/boot.asm"
 .include	"system/memory.asm"
-

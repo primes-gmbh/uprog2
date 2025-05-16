@@ -219,7 +219,7 @@ KEA64SWD_ORUN:
 
 		if((mass_erase == 1) && (errc == 0))
 		{
-			errc=prg_comm(0x1D0,0,16,0,0,0,0,0xDE,0x01);	//init
+			errc=prg_comm(0x1D0,0,16,0,0,0,0,0xDE,0x11);	//init
 			printf("JID: %02X%02X%02X%02X\n",memory[3],memory[2],memory[1],memory[0]);
 			if(errc > 0) goto ERR_EXIT;
 			printf("ERASE FLASH\n");
@@ -227,11 +227,11 @@ KEA64SWD_ORUN:
 			printf("MASS ERASE_TIME: %d ms\n",(20-memory[0])*20);
 			if(errc > 0) goto ERR_EXIT;
 			printf("RE-INIT\n");
-			errc=prg_comm(0x1D0,0,16,0,0,0,0,0xDE,0x00);		//re-init
+			errc=prg_comm(0x1D0,0,16,0,0,0,0,0xDE,0x10);		//re-init
 		}
 		else
 		{
-			errc=prg_comm(0x1D0,0,16,0,0,0,0,0xDE,0);					//init
+			errc=prg_comm(0x1D0,0,16,0,0,0,0,0xDE,0x10);					//init
 			printf("JID: %02X%02X%02X%02X\n",memory[3],memory[2],memory[1],memory[0]);
 //			printf("ERR= %02X\n",errc);
 			if(errc > 0) goto ERR_EXIT;

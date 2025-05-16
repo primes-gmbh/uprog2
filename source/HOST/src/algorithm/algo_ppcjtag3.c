@@ -24,6 +24,8 @@
 
 #include <main.h>
 #include "exec/ppcjtag_84c/exec_ppcjtag.h"
+unsigned char jkey[32]; 
+
 
 void print_ppcjtag3_error(int errc)
 {
@@ -239,39 +241,26 @@ int prog_ppcjtag3(void)
 		printf("## Action: start code in flash\n");
 	}
 
-
 	if((strstr(cmd,"key:")) && ((strstr(cmd,"key:") - cmd) % 2 == 1))
 	{
 		parptr=strstr(cmd,"key:");
-		strncpy(&hexbyte[0],parptr + 4 * sizeof(char),2);
-		hexbyte[2]=0;
-		sscanf(hexbyte,"%x",&lb0);
-		strncpy(&hexbyte[0],parptr + 6 * sizeof(char),2);
-		hexbyte[2]=0;
-		sscanf(hexbyte,"%x",&lb1);
-		strncpy(&hexbyte[0],parptr + 8 * sizeof(char),2);
-		hexbyte[2]=0;
-		sscanf(hexbyte,"%x",&lb2);
-		strncpy(&hexbyte[0],parptr + 10 * sizeof(char),2);
-		hexbyte[2]=0;
-		sscanf(hexbyte,"%x",&lb3);
-		strncpy(&hexbyte[0],parptr + 12 * sizeof(char),2);
-		hexbyte[2]=0;
-		sscanf(hexbyte,"%x",&lb4);
-		strncpy(&hexbyte[0],parptr + 14 * sizeof(char),2);
-		hexbyte[2]=0;
-		sscanf(hexbyte,"%x",&lb5);
-		strncpy(&hexbyte[0],parptr + 16 * sizeof(char),2);
-		hexbyte[2]=0;
-		sscanf(hexbyte,"%x",&lb6);
-		strncpy(&hexbyte[0],parptr + 18 * sizeof(char),2);
-		hexbyte[2]=0;
-		sscanf(hexbyte,"%x",&lb7);
-		strncpy(&hexbyte[0],parptr + 20 * sizeof(char),2);
-		hexbyte[2]=0;
-		sscanf(hexbyte,"%x",&lbx);
-		printf("## Action: unlock device using %02X:%02X:%02X:%02X:%02X:%02X:%02X:%02X - %02X\n",
-		lb0,lb1,lb2,lb3,lb4,lb5,lb6,lb7,lbx);
+		
+		for(i=0;i<32;i++)
+		{
+			strncpy(&hexbyte[0],parptr + (4 + 2 * i) * sizeof(char),2);
+			hexbyte[2]=0;
+			sscanf(hexbyte,"%x",&jkey[32-i]);
+		}
+
+		printf("## Action: unlock device using  key:\n");
+		for(i=0;i<4;i++)
+		{
+			for(j=0;j<8;j++)
+			{
+				printf(" %02X",jkey[j*4+i]);	
+			}
+			printf("\n");
+		}		
 		unlock=1;
 	}
 
@@ -374,15 +363,7 @@ int prog_ppcjtag3(void)
 		if(unlock == 1)
 		{
 			printf("TRY TO UNLOCK....\n");
-			memory[0]=lb0;memory[1]=lb1;memory[2]=lb2;memory[3]=lb3;
-			memory[4]=lb4;memory[5]=lb5;memory[6]=lb6;memory[7]=lb7;
-			for(i=0;i<8;i++) 
-			{
-				memory[i*4+0]=0x55;
-				memory[i*4+1]=0xAA;
-				memory[i*4+2]=0x5A;
-				memory[i*4+3]=0x5A;
-			}				
+			for(j=0;j<32;j++) memory[j]=jkey[j];
 			errc=prg_comm(0x18A,32,0,0,0,7,0,0,0);				//unlock
 		}
 
@@ -1103,3 +1084,5 @@ ppcjtag3_END:
 	print_ppcjtag3_error(errc);
 	return errc;
 }
+
+

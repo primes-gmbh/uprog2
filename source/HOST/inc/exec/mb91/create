@@ -1,0 +1,9 @@
+#!/bin/bash
+
+./generate.pl m_flash.522 exec_f522.h mb51_522
+./generate.pl m_flash.523 exec_f523.h mb51_523
+./generate.pl m_flash.524 exec_f524.h mb51_524
+./generate.pl m_flash.525 exec_f525.h mb51_525
+./generate.pl m_flash.526 exec_f526.h mb51_526
+./generate.pl m_flash.527 exec_f527.h mb51_527
+./generate.pl m_flash.528 exec_f528.h mb51_528

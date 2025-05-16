@@ -22,6 +22,7 @@
 ;#										#
 ;################################################################################
 
+
 ;------------------------------------------------------------------------------
 ; init I2C
 ; par1 0=100K 1=400K
@@ -80,7 +81,6 @@ i2c_wad:		rcall	i2c_start		;start condition
 			rcall	i2c_wbyte
 			cpi	r23,0x28		;check for result
 			brne	i2c_wad_e		;error
-
 
 i2c_wad_2:		mov	XL,r24			;addr low
 			rcall	i2c_wbyte
@@ -372,3 +372,82 @@ i2c_rbyten:		ldi	r20,(1<<TWINT) | (1<<TWEN)
 			rcall	i2c_wready
 			lds	XL,TWDR				;get data
 			ret
+
+;-------------------------------------------------------------------------------
+; I2C write (generic)
+; PAR1:	addr
+; PAR3:	CMD
+; PAR4:	LEN
+;-------------------------------------------------------------------------------
+i2c_bwrite1:		mov	r5,const_1
+			rjmp	i2c_bwrite_1
+
+i2c_bwrite2:		mov	r5,const_0
+
+i2c_bwrite_1:		movw	r24,r16			;copy addr
+			call	api_resetptr
+			rcall	i2c_wad			;write address
+
+i2c_bwrite_2:		call	api_buf_bread
+			rcall	i2c_wbyte		;write byte
+			cpi	r23,0x28		;error?
+			brne	i2c_bwrite_e
+			dec	r19
+			brne	i2c_bwrite_2
+			rcall	i2c_stop
+			jmp	main_loop_ok		;stop condition and end
+
+i2c_bwrite_e:		ldi	r16,0x41
+			jmp	main_loop
+
+;-------------------------------------------------------------------------------
+; I2C read (generic)
+; PAR1:	ADDRL
+; PAR2:	ADDRH (opt)
+; PAR3:	CMD
+; PAR4:	LEN
+;-------------------------------------------------------------------------------
+i2c_bread1:		mov	r5,const_1
+			rjmp	i2c_bread_1
+
+i2c_bread2:		mov	r5,const_1
+	
+	
+i2c_bread_1:		movw	r24,r16
+			call	api_resetptr
+			
+i2c_bread0:		rcall	i2c_wad			;write address
+	
+			rcall	i2c_start		;repeated start condition
+			cpi	r23,0x10
+			brne	i2c_err2		;error
+
+			mov	XL,r18			;devsel
+			ori	XL,0x01			;read
+			rcall	i2c_wbyte
+			cpi	r23,0x40
+			brne	i2c_err2			;error
+			
+i2c_bread_4:		cpi	r25,0
+			brne	i2c_bread_5
+			cpi	r24,1
+			brne	i2c_bread_5
+			rcall	i2c_rbyten		;read byte with NACK
+			call	api_buf_bwrite		;write byte to buffer
+			cpi	r23,0x58		;error?
+			brne	i2c_err2
+			rcall	i2c_stop
+			jmp	main_loop_ok		;stop condition and end
+
+i2c_bread_5:		rcall	i2c_rbyte		;read byte with ACK
+			cpi	r23,0x50		;error?
+			brne	i2c_err2
+			call	api_buf_bwrite		;write byte to buffer
+			sbiw	r24,1
+			rjmp	i2c_bread_4
+			rcall	i2c_stop
+			jmp	main_loop_ok		;stop condition and end
+
+i2c_err2:		ldi	r16,0x42		;set error
+			rcall	i2c_stop
+			jmp	main_loop		;stop condition and end

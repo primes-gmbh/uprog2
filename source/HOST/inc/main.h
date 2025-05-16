@@ -4,6 +4,7 @@
 #include<termios.h>
 #include<unistd.h>
 #include<fcntl.h>
+#include<time.h>
 #include<subfunct.h>
 #include<readhex.h>
 #include<writehex.h>
@@ -14,8 +15,28 @@
 
 #define DEBUG_OUTPUT 0
 
-#define ARM_READ_ID 0xA5
-#define ARM_READ_CSTAT 0xB1
+#define SWD_READ_IDCODE 0xA5
+#define SWD_WRITE_ABORT 0x81
+
+#define SWD_READ_CTRLSTAT 0xB1
+#define SWD_WRITE_CTRLSTAT 0x95
+
+#define SWD_READ_STAT 0xA9
+#define SWD_WRITE_SELECT 0x8D
+
+#define SWD_READ_RDBUFF 0xBD
+
+#define SWD_READ_CSW 0xE1
+#define SWD_WRITE_CSW 0xC5
+
+#define SWD_READ_TAR 0xF5
+#define SWD_WRITE_TAR 0xD1
+
+#define SWD_READ_IDR 0xED
+#define SWD_WRITE_BASE 0xC9
+
+#define SWD_READ_DRW 0xF9
+#define SWD_WRITE_DRW 0xDD
 
 unsigned char *memory;		//global memory map
 unsigned char *memory_used;	//global memory map (used memory)
@@ -26,6 +47,7 @@ char sfile2[300];		//data file
 char sfile3[300];		//data file
 char sfile4[300];		//data file
 char tfile[300];		//temporary data file
+char logdata[10000];		//additional logdata
 char cmd[100];			//command
 char stype[300];
 char name[50];			//device name
@@ -35,6 +57,8 @@ long max_post_data;
 long post_data_start;
 int hold_vdd;
 int range_err;
+int file_err;
+int loglevel;
 unsigned char com_buf[33000];
 
 unsigned long loaddr,hiaddr;
@@ -53,6 +77,7 @@ unsigned long param[20];
 int algo_nr;
 FILE *datei;
 FILE *tdatei;
+FILE *ldatei;
 float v_batt,v_ext,v_prog;
 unsigned char rwbuffer[4096];
 int max_blocksize;

@@ -1,7 +1,7 @@
 
 boot.elf:     file format elf32-littlearm
 boot.elf
-architecture: arm, flags 0x00000112:
+architecture: armv6s-m, flags 0x00000112:
 EXEC_P, HAS_SYMS, D_PAGED
 start address 0x20000000
 
@@ -203,7 +203,7 @@ c0000000 l       *ABS*	00000000 PCC_ACTIVE
 200001e8 g       .text	00000000 __bss_end__
 00000400 g       *ABS*	00000000 stack_size
 20002c00 g       *ABS*	00000000 _stack_end
-20003000 g       *ABS*	00000000 _stack_start
+20003000 g       .text	00000000 _stack_start
 200001e8 g       .text	00000000 _edata
 
 
@@ -500,7 +500,7 @@ Disassembly of section .text:
 200001da:	02000000 	andeq	r0, r0, #0
 200001de:	00000000 	andeq	r0, r0, r0
 200001e2:	00004002 	andeq	r4, r0, r2
-200001e6:	Address 0x200001e6 is out of bounds.
+200001e6:	Address 0x00000000200001e6 is out of bounds.
 
 
 Disassembly of section .heap:
@@ -519,5 +519,5 @@ Disassembly of section .ARM.attributes:
   14:	2d786574 	cfldr64cs	mvdx6, [r8, #-464]!	; 0xfffffe30
   18:	0600304d 	streq	r3, [r0], -sp, asr #32
   1c:	094d070c 	stmdbeq	sp, {r2, r3, r8, r9, sl}^
-  20:	Address 0x00000020 is out of bounds.
+  20:	Address 0x0000000000000020 is out of bounds.
 

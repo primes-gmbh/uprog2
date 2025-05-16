@@ -478,6 +478,7 @@ int check_cmd_prog(char *cptr,char *tptr)
 		if(file_found < 2)
 		{
 			printf("## Action: %s program !! DISABLED BECAUSE OF NO FILE !!\n",tptr);
+			file_err=1;
 			return 0;
 		}
 		else
@@ -500,6 +501,7 @@ int check_cmd_verify(char *cptr,char *tptr)
 		if(file_found < 2)
 		{
 			printf("## Action: %s verify !! DISABLED BECAUSE OF NO FILE !!\n",tptr);
+			file_err=1;
 			return 0;
 		}
 		else
@@ -529,6 +531,7 @@ int check_cmd_read(char *cptr,char *tptr,int *pptr,int *vptr)
 		if(file_found < 1)
 		{
 			printf("## Action: %s read !! DISABLED BECAUSE OF NO FILE !!\n",tptr);
+			file_err=1;
 			return 0;
 		}
 		else
@@ -548,6 +551,7 @@ int check_cmd_read2(char *cptr,char *tptr)
 		if(file_found < 1)
 		{
 			printf("## Action: %s read !! DISABLED BECAUSE OF NO FILE !!\n",tptr);
+			file_err=1;
 			return 0;
 		}
 		else
@@ -587,13 +591,17 @@ void set_error(char *emessage,int errnum)
 {
 	int i,l;
 
-	if(errnum < 10)
+	if(errnum > 9)
 	{
-		sprintf(error_line,"%s",emessage);
+		sprintf(error_line,"ERROR %02X (%d):  %s",errnum,errnum,emessage);
+	}
+	else if(file_err != 0)
+	{
+		sprintf(error_line,"FILE ERROR");
 	}
 	else
 	{
-		sprintf(error_line,"ERROR %02X (%d):  %s",errnum,errnum,emessage);
+		sprintf(error_line,"%s",emessage);
 	}
 	
 	l=strlen(error_line);
@@ -636,3 +644,48 @@ void paraprog_view(int offset)
 			
 	printf("   ADDR= %02X%02X%02X%02X   DATA= %02X%02X\n",memory[offset+5],memory[offset+4],memory[offset+3],memory[offset+2],memory[offset+1],memory[offset+0]);
 }
+
+
+//----------------------------------------------------------------------------------
+// logging functions
+//----------------------------------------------------------------------------------
+void addlog1(char *ltext)
+{
+	if(loglevel > 0)
+	{
+		strcat(logdata,"# ");
+		strcat(logdata,ltext);
+		strcat(logdata,"\n");
+	}
+}
+
+void addlog2(char *ltext)
+{
+	if(loglevel > 1)
+	{
+		strcat(logdata,"# ");
+		strcat(logdata,ltext);
+		strcat(logdata,"\n");
+	}
+}
+
+void addlog3(char *ltext)
+{
+	if(loglevel > 2)
+	{
+		strcat(logdata,"# ");
+		strcat(logdata,ltext);
+		strcat(logdata,"\n");
+	}
+}
+
+void addlog4(char *ltext)
+{
+	if(loglevel > 3)
+	{
+		strcat(logdata,"# ");
+		strcat(logdata,ltext);
+		strcat(logdata,"\n");
+	}
+}
+

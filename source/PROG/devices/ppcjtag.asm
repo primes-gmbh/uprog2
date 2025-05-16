@@ -1003,8 +1003,24 @@ ppcjtag_unlock:		ldi	XL,0x07			;censorship register
 			ldi	r24,64			;bits to do
 			rcall	jppc_mshift
 	
-ppcjtag_unlock2:	jmp	main_loop_ok
+ppcjtag_unlockx:	jmp	main_loop_ok
 
+			
+;-------------------------------------------------------------------------------
+; unlock device (SPC58x)
+;-------------------------------------------------------------------------------
+ppcjtag_unlock2:	mov	XL,r16
+			call	api_resetptr		;reset buffer pointer
+			ldi	r24,6			;5 bits
+			set				;IR shift
+			rcall	jppc_shift		
+		
+			clt				;IR shift
+			ldi	r24,0			;256 bits to do
+			rcall	jppc_mshift
+	
+ppcjtag_unlock2x:	jmp	main_loop_ok
+			
 
 ;------------------------------------------------------------------------------
 ; clear nexus rwcs register
@@ -1102,7 +1118,7 @@ nexus_write_data32:	ldi	r16,JPPC_NEXUS_WR_DATA
 			clt				;DR shift
 
 ;------------------------------------------------------------------------------
-; do IR/DR SHIFT (1-255 Bits)
+; do IR/DR SHIFT (1-32 Bits)
 ; T=0 -> DR SCAN
 ; T=1 -> IR SCAN
 ; r16-r19	Data to send
@@ -1232,7 +1248,6 @@ jppc_mshift_ex:		PPCJTAG_CLOCK				;-> UPDATE
 			PPCJTAG_CLOCK				;-> additional clocks
 
 jppc_mshift_5:		ret
-
 
 
 ;------------------------------------------------------------------------------

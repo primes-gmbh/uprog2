@@ -369,7 +369,7 @@ prg_exec_jtab2:
 		jmp	rh850_bcheck		;code 150 RH850 blank check
 		jmp	rh850_erase		;code 151 RH850 erase
 		jmp	rh850_prog_start	;code 152 RH850 start programming
-		jmp	prg_exec_e1		;code 153 unknown
+		jmp	swd32_cmd3		;code 153 S32K3 send command to bootcode
 		jmp	prg_exec_e1		;code 154 unknown
 		jmp	rh850_read_start	;code 155 RH850 start reading
 		jmp	rh850_read_block	;code 156 RH850 read 2 blocks
@@ -474,8 +474,8 @@ prg_exec_jtab2:
 		jmp	prg_exec_e1		;code 1b3 unknown
 		jmp	prg_exec_e1		;code 1b4 unknown
 		jmp	prg_exec_e1		;code 1b5 unknown
-		jmp	prg_exec_e1		;code 1b6 unknown
-		jmp	prg_exec_e1		;code 1b7 unknown
+		jmp	swd32_fread		;code 1b6 SWD fast read with auto inrement
+		jmp	swd32_fwrite		;code 1b7 SWD fast write with auto increment
 		jmp	pic1_readid2		;code 1b8 pic16 read ID (new protocol)
 		jmp	pic1_read2		;code 1b9 pic16 read (new protocol)
 		jmp	pic1_merase3		;code 1ba pic16 bulk erase (new protocol)
@@ -636,21 +636,21 @@ prg_exec_jtab3:	jmp	s08_cmd			;code 200 HCS08 single byte command
 		jmp	swd32_get_register	;code 257 SWD get AP/DP register
 		jmp	swd32ra_reset		;code 258 Renases RA reset
 		jmp	prg_exec_e1		;code 259 unknown
-		jmp	prg_exec_e1		;code 25a unknown
-		jmp	prg_exec_e1		;code 25b unknown
+		jmp	s32k3_check_auth	;code 25a S32K3 get SDA status
+		jmp	s32k3_check_test	;code 25b S32K3 ahb test
 		jmp	prg_exec_e1		;code 25c unknown
 		jmp	prg_exec_e1		;code 25d unknown
 		jmp	prg_exec_e1		;code 25e unknown
-		jmp	prg_exec_e1		;code 25f unknown
+		jmp	swd32_swdexec3		;code 25f SWD32 sequence (mode 3)
 
-		jmp	prg_exec_e1		;code 260 unknown
-		jmp	prg_exec_e1		;code 261 unknown
-		jmp	prg_exec_e1		;code 262 unknown
-		jmp	prg_exec_e1		;code 263 unknown
-		jmp	prg_exec_e1		;code 264 unknown
-		jmp	prg_exec_e1		;code 265 unknown
-		jmp	prg_exec_e1		;code 266 unknown
-		jmp	prg_exec_e1		;code 267 unknown
+		jmp	pic3_init		;code 260 PIC18 init
+		jmp	pic3_bulk_erase		;code 261 PIC18 bulk erase
+		jmp	pic3_readf		;code 262 PIC18 read flash locks
+		jmp	pic3_readw		;code 263 PIC18 read words
+		jmp	pic3_readb		;code 264 PIC18 read bytes
+		jmp	pic3_progf		;code 265 PIC18 program flash blocks
+		jmp	pic3_progw		;code 266 PIC18 program words
+		jmp	pic3_progb		;code 267 PIC18 program bytes
 		jmp	prg_exec_e1		;code 268 unknown
 		jmp	prg_exec_e1		;code 269 unknown
 		jmp	prg_exec_e1		;code 26a unknown
@@ -779,8 +779,8 @@ prg_exec_jtab3:	jmp	s08_cmd			;code 200 HCS08 single byte command
 		jmp	prg_exec_e1		;code 2de unknown
 		jmp	prg_exec_e1		;code 2df unknown
 
-		jmp	prg_exec_e1		;code 2e0 unknown
-		jmp	prg_exec_e1		;code 2e1 unknown
+		jmp	xspi_comm0		;code 2e0 ISP-SPI comm with CS at PORTB0
+		jmp	xspi_comm1		;code 2e1 ISP-SPI comm with CS at PORTB1
 		jmp	prg_exec_e1		;code 2e2 unknown
 		jmp	prg_exec_e1		;code 2e3 unknown
 		jmp	prg_exec_e1		;code 2e4 unknown
@@ -926,5 +926,4 @@ prog_clr_dir:	in	XL,CTRLDDR
 		jmp	main_loop_ok
 		
 		;this table is reserved for debugging commands
-		
 		

@@ -647,14 +647,13 @@ int prog_atxmega(void)
 	}
 
 
-
 	if((dev_start == 1) && (errc == 0))
 	{
 		errc=prg_comm(0x0e,0,0,0,0,0,0,0,0);			//init
 		waitkey();
 	}
 
-	if(errc==0) i=prg_comm(0x132,0,0,0,0,0,0,0,0);	//exit
+	prg_comm(0x132,0,0,0,0,0,0,0,0);	//exit
 	prg_comm(0x2ef,0,0,0,0,0,0,0,0);	//dev 1
 
 	print_atxmega_error(errc,eblock*max_blocksize);

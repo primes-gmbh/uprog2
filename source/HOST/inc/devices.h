@@ -1,6 +1,6 @@
 #ifndef _DEVICE_LIST_
 
-devicedat valid_devices[1000] = {
+devicedat valid_devices[2000] = {
 
 	"LIST",
 	200,
@@ -55,7 +55,7 @@ devicedat valid_devices[1000] = {
 	0x0000,0x0000,
 	0x0000,0x0000,
 
-	"S19TOHEX",
+	"HEX2HEX",
 	210,
 	0x00000000,0x00000000,		//dummy data
 	0x0000,0x0000,
@@ -108,6 +108,18 @@ devicedat valid_devices[1000] = {
 	0x0000,0x0000,
 	0x0000,0x0000,
 
+	"XSPI",
+	74,
+	0x00000000,0x00000000,		//dummy data
+	0x0000,0x0000,
+	0x0000,0x0000,
+	0x0000,0x0000,
+	0x0000,0x0000,		//RAM
+	0x00000000,		//ID
+	0x0000,0x0000,
+	0x0000,0x0000,
+	0x0000,0x0000,
+	0x0000,0x0000,
 
 	"FGEN",
 	197,
@@ -134,6 +146,7 @@ devicedat valid_devices[1000] = {
 #include	"devices/devices_PIC12.h"
 #include	"devices/devices_PIC16.h"
 #include	"devices/devices_PIC18.h"
+#include	"devices/devices_PIC18b.h"
 //#include	"devices/devices_DSPIC30.h"
 #include	"devices/devices_DSPIC33.h"
 #include	"devices/devices_PPCBAM.h"
@@ -170,13 +183,14 @@ devicedat valid_devices[1000] = {
 
 
 
-
+#include	"devices/devices_RF430.h"
 #include	"devices/devices_SPC58.h"
 #include	"devices/devices_MLX.h"
 #include	"devices/devices_DGEN.h"
 #include	"devices/devices_SPIEEPROM.h"
 #include	"devices/devices_LPS25H.h"
-#include	"devices/devices_S32K.h"
+#include	"devices/devices_S32K1.h"
+#include	"devices/devices_S32K3.h"
 #include	"devices/devices_KEA64.h"
 #include	"devices/devices_TLE.h"
 #include	"devices/devices_AVR0.h"
@@ -187,7 +201,7 @@ devicedat valid_devices[1000] = {
 #include	"devices/devices_ONEWIRE.h"
 //#include	"devices/devices_SAMD21.h"
 #include	"devices/devices_VEML3328.h"
-
+#include	"devices/devices_MB91.h"
 #include	"devices/devices_RA6.h"
 #include	"devices_paraprog/devices_PFLASH.h"
 

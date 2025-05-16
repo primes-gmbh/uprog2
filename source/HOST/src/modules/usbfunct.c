@@ -89,6 +89,9 @@ int check_usb(int vpid)
 	{
 		usb_stat = ftdi_usb_open(&ftdic,0x0403,0x6661);			//UPROG2
 	}
+
+//	printf("STAGE X stat= %d\n",usb_stat);
+
 	if(usb_stat != 0) usb_stat = ftdi_usb_open(&ftdic,0x2763,0xFFFF);	//5inf
 	if(usb_stat != 0)
 	{
@@ -125,6 +128,9 @@ int check_usb(int vpid)
 		printf("ERROR SET LATENCY TIMER (%s)\n",ftdi_get_error_string(&ftdic));
 		return 2;
 	}
+
+//	printf("STAGE Y stat= %d\n",usb_stat);
+
 
 	com_buf[0]=0xaa;	//query
 	com_buf[1]=0xf9;	//returns a "invalid" answer

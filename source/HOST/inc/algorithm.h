@@ -18,6 +18,7 @@
 #include <algorithm/algo_pic16c.h>
 #include <algorithm/algo_pic16d.h>
 #include <algorithm/algo_pic18a.h>
+#include <algorithm/algo_pic18b.h>
 #include <algorithm/algo_ppcbam.h>
 #include <algorithm/algo_ppcjtag.h>
 #include <algorithm/algo_ppcjtag2.h>
@@ -53,7 +54,7 @@
 
 
 
-
+#include <algorithm/algo_rf430.h>
 #include <algorithm/algo_fgen.h>
 #include <algorithm/algo_la.h>
 #include <algorithm/algo_lps25h.h>
@@ -67,8 +68,9 @@
 //#include <algorithm/algo_samdswd.h>
 #include <algorithm/algo_veml3328.h>
 #include <algorithm/algo_tle986x.h>
-
+#include <algorithm/algo_mb91.h>
 #include <algorithm/algo_ra6.h>
+#include <algorithm/algo_at24rf08.h>
 
 #include <algorithm/algo_xc9500.h>
 #include <algorithm/algo_rundev.h>
@@ -76,4 +78,4 @@
 #include <algorithm/list.h>
 
 int prog_dgen(void);
-int s19tohex(void);
+int hex2hex(void);

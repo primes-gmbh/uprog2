@@ -39,8 +39,8 @@ swd32ra_init_0:		ldi		ZL,200
 			call		api_wait_ms
 ;			sbi		CTRLPORT,SWD32_RST	;release reset
 
-swd32ra_init_1:		cbi		CTRLPORT,SWD32_CLOCK
-			cbi		CTRLPORT,SWD32_DATA
+swd32ra_init_1:		sbi		CTRLPORT,SWD32_CLOCK
+			sbi		CTRLPORT,SWD32_DATA
 			clr		ZL
 			call		swd32_w0_1
 
@@ -124,10 +124,10 @@ swd32ra_era2:	;	jmp		main_loop_ok
 			rjmp		swd32ra_init
 
 		
-swd32ra_reset:		cbi		CTRLPORT,SWD32_RST	;release reset
-			call		swd32_wait_1ms		;next try
+swd32ra_reset:		cbi		CTRLPORT,SWD32_RST	;activate reset
+			call		swd32_wait_1ms
 			sbi		CTRLPORT,SWD32_RST	;release reset
-			call		swd32_wait_1ms		;next try
+			call		swd32_wait_1ms
 			jmp		main_loop_ok	
 			
 swd32ra_hpulse:		out		CTRLPORT,r14

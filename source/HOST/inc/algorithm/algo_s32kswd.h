@@ -1,2 +1,4 @@
 
-int prog_s32kswd(void);
+int prog_s32k1swd(void);
+
+int prog_s32k3swd(void);

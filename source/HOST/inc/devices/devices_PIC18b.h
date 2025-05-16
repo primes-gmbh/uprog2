@@ -1,0 +1,196 @@
+
+	"PIC18F04Q41",
+	77,
+	0x000000,0x004000,		//main flash (8KW)
+	0x380000,0x000200,		//EEPROM
+	0x300000,0x000009,		//config
+	0x200000,0x000040,		//user ID
+	0x000055,0x000011,		//VPP / no key
+	0x00007540,			//ID
+	0x0000,0x0000,			//prog times
+	0x0000,0x0000,			//pagesize
+	0xBFFFEB77,0x8F3F3F7F,		//config mask byte 1-8
+	0x00000001,0x00000000,		//config mask byte 9-15
+
+	"PIC18F05Q41",
+	77,
+	0x000000,0x008000,		//main flash (16KW)
+	0x380000,0x000200,		//EEPROM
+	0x300000,0x000009,		//config
+	0x200000,0x000040,		//user ID
+	0x000055,0x000011,		//VPP / no key
+	0x00007500,			//ID
+	0x0000,0x0000,			//prog times
+	0x0000,0x0000,			//pagesize
+	0xBFFFEB77,0x8F3F3F7F,		//config mask byte 1-8
+	0x00000001,0x00000000,		//config mask byte 9-15
+
+	"PIC18F06Q41",
+	77,
+	0x000000,0x010000,		//main flash (32KW)
+	0x380000,0x000200,		//EEPROM
+	0x300000,0x000009,		//config
+	0x200000,0x000040,		//user ID
+	0x000055,0x000011,		//VPP / no key
+	0x00007580,			//ID
+	0x0000,0x0000,			//prog times
+	0x0000,0x0000,			//pagesize
+	0xBFFFEB77,0x8F3F3F7F,		//config mask byte 1-8
+	0x00000001,0x00000000,		//config mask byte 9-15
+
+	"PIC18F14Q41",
+	77,
+	0x000000,0x004000,		//main flash (8KW)
+	0x380000,0x000200,		//EEPROM
+	0x300000,0x000009,		//config
+	0x200000,0x000040,		//user ID
+	0x000055,0x000011,		//VPP / no key
+	0x00007520,			//ID
+	0x0000,0x0000,			//prog times
+	0x0000,0x0000,			//pagesize
+	0xBFFFEB77,0x8F3F3F7F,		//config mask byte 1-8
+	0x00000001,0x00000000,		//config mask byte 9-15
+
+	"PIC18F15Q41",
+	77,
+	0x000000,0x008000,		//main flash (16KW)
+	0x380000,0x000200,		//EEPROM
+	0x300000,0x000009,		//config
+	0x200000,0x000040,		//user ID
+	0x000055,0x000011,		//VPP / no key
+	0x000074E0,			//ID
+	0x0000,0x0000,			//prog times
+	0x0000,0x0000,			//pagesize
+	0xBFFFEB77,0x8F3F3F7F,		//config mask byte 1-8
+	0x00000001,0x00000000,		//config mask byte 9-15
+
+	"PIC18F16Q41",
+	77,
+	0x000000,0x010000,		//main flash (32KW)
+	0x380000,0x000200,		//EEPROM
+	0x300000,0x000009,		//config
+	0x200000,0x000040,		//user ID
+	0x000055,0x000011,		//VPP / no key
+	0x00007560,			//ID
+	0x0000,0x0000,			//prog times
+	0x0000,0x0000,			//pagesize
+	0xBFFFEB77,0x8F3F3F7F,		//config mask byte 1-8
+	0x00000001,0x00000000,		//config mask byte 9-15
+
+	"PIC18F25Q43",
+	77,
+	0x000000,0x008000,		//main flash (16KW)
+	0x380000,0x000400,		//EEPROM
+	0x300000,0x00000A,		//config
+	0x200000,0x000040,		//user ID
+	0x000055,0x000011,		//VPP / no key
+	0x000073C0,			//ID
+	0x0000,0x0000,			//prog times
+	0x0000,0x0000,			//pagesize
+	0xBFFF2B77,0x8F3F3F7F,		//config mask byte 1-8
+	0x00000100,0x00000000,		//config mask byte 9-15
+
+	"PIC18F45Q43",
+	77,
+	0x000000,0x008000,		//main flash (16KW)
+	0x380000,0x000400,		//EEPROM
+	0x300000,0x00000A,		//config
+	0x200000,0x000040,		//user ID
+	0x000055,0x000011,		//VPP / no key
+	0x000073E0,			//ID
+	0x0000,0x0000,			//prog times
+	0x0000,0x0000,			//pagesize
+	0xBFFF2B77,0x8F3F3F7F,		//config mask byte 1-8
+	0x00000100,0x00000000,		//config mask byte 9-15
+
+	"PIC18F55Q43",
+	77,
+	0x000000,0x008000,		//main flash (16KW)
+	0x380000,0x000400,		//EEPROM
+	0x300000,0x00000A,		//config
+	0x200000,0x000040,		//user ID
+	0x000055,0x000011,		//VPP / no key
+	0x00007400,			//ID
+	0x0000,0x0000,			//prog times
+	0x0000,0x0000,			//pagesize
+	0xBFFF2B77,0x8F3F3F7F,		//config mask byte 1-8
+	0x00000100,0x00000000,		//config mask byte 9-15
+
+	"PIC18F26Q43",
+	77,
+	0x000000,0x010000,		//main flash (16KW)
+	0x380000,0x000400,		//EEPROM
+	0x300000,0x00000A,		//config
+	0x200000,0x000040,		//user ID
+	0x000055,0x000011,		//VPP / no key
+	0x00007420,			//ID
+	0x0000,0x0000,			//prog times
+	0x0000,0x0000,			//pagesize
+	0xBFFF2B77,0x8F3F3F7F,		//config mask byte 1-8
+	0x00000100,0x00000000,		//config mask byte 9-15
+
+	"PIC18F46Q43",
+	77,
+	0x000000,0x010000,		//main flash (16KW)
+	0x380000,0x000400,		//EEPROM
+	0x300000,0x00000A,		//config
+	0x200000,0x000040,		//user ID
+	0x000055,0x000011,		//VPP / no key
+	0x00007440,			//ID
+	0x0000,0x0000,			//prog times
+	0x0000,0x0000,			//pagesize
+	0xBFFF2B77,0x8F3F3F7F,		//config mask byte 1-8
+	0x00000100,0x00000000,		//config mask byte 9-15
+
+	"PIC18F56Q43",
+	77,
+	0x000000,0x010000,		//main flash (16KW)
+	0x380000,0x000400,		//EEPROM
+	0x300000,0x00000A,		//config
+	0x200000,0x000040,		//user ID
+	0x000055,0x000011,		//VPP / no key
+	0x00007460,			//ID
+	0x0000,0x0000,			//prog times
+	0x0000,0x0000,			//pagesize
+	0xBFFF2B77,0x8F3F3F7F,		//config mask byte 1-8
+	0x00000100,0x00000000,		//config mask byte 9-15
+
+	"PIC18F27Q43",
+	77,
+	0x000000,0x020000,		//main flash (16KW)
+	0x380000,0x000400,		//EEPROM
+	0x300000,0x00000A,		//config
+	0x200000,0x000040,		//user ID
+	0x000055,0x000011,		//VPP / no key
+	0x00007480,			//ID
+	0x0000,0x0000,			//prog times
+	0x0000,0x0000,			//pagesize
+	0xBFFF2B77,0x8F3F3F7F,		//config mask byte 1-8
+	0x00000100,0x00000000,		//config mask byte 9-15
+
+	"PIC18F47Q43",
+	77,
+	0x000000,0x020000,		//main flash (16KW)
+	0x380000,0x000400,		//EEPROM
+	0x300000,0x00000A,		//config
+	0x200000,0x000040,		//user ID
+	0x000055,0x000011,		//VPP / no key
+	0x000074A0,			//ID
+	0x0000,0x0000,			//prog times
+	0x0000,0x0000,			//pagesize
+	0xBFFF2B77,0x8F3F3F7F,		//config mask byte 1-8
+	0x00000100,0x00000000,		//config mask byte 9-15
+
+	"PIC18F57Q43",
+	77,
+	0x000000,0x020000,		//main flash (16KW)
+	0x380000,0x000400,		//EEPROM
+	0x300000,0x00000A,		//config
+	0x200000,0x000040,		//user ID
+	0x000055,0x000011,		//VPP / no key
+	0x000074C0,			//ID
+	0x0000,0x0000,			//prog times
+	0x0000,0x0000,			//pagesize
+	0xBFFF2B77,0x8F3F3F7F,		//config mask byte 1-8
+	0x00000100,0x00000000,		//config mask byte 9-15
+

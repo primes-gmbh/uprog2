@@ -16,7 +16,8 @@ void out_byte(unsigned char data)
 		else
 			portpin_set_low(DATA_PIN);	//start
 		data >>=1;
-		unilib_pause(18);
+		unilib_pause(19);
+		asm("nop");
 	}
 	portpin_set_high(DATA_PIN);	//stop
 	unilib_pause(100);
@@ -44,11 +45,13 @@ int main()
 		portpin_set_input_pullup(DATA_PIN);
 		while(portpin_get(DATA_PIN) != 0);
 		while(portpin_get(DATA_PIN) == 0);
-		unilib_pause_ms(5);
 		portpin_set_high(DATA_PIN);
 		portpin_set_output(DATA_PIN);
+		unilib_pause_ms(2);
 
 		for(bytes=0;bytes<2048;bytes++) out_byte(*rptr++);
+//		for(bytes=0;bytes<2048;bytes++) out_byte(0x55);
+
 	}
 		
 }

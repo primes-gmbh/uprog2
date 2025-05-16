@@ -303,7 +303,7 @@ int prog_rh850(void)
 		printf("-- nw   -- protect write\n");
 		printf("-- ne   -- protect erase\n");
 		printf("-- sb   -- small blocks (256/16)\n");
-		printf("-- fp   -- full prog\n");
+		printf("-- fp   -- fast prog\n");
 
 		printf("-- rr   -- run code in RAM\n");
 		printf("-- st   -- start device\n");
@@ -833,6 +833,7 @@ RH850_INIT:
 			errc=memory[ROFFSET+4];
 			goto RH850_END;
 		}
+		showframe_rh850(0);
 
 		printf(">> DEVICE = ");
 		for(i=4;i<13;i++) printf("%c",memory[ROFFSET+i]);

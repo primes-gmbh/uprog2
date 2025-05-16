@@ -631,7 +631,13 @@ rl78_gdump:	call	api_resetptr
 		ldi	XL,0
 		ldi	r24,0
 		ldi	r25,8
-		call	send2_38400s
+		sbi	CTRLDDR,SIG2
+		cbi	CTRLPORT,SIG2
+		rcall	rl78_wait1ms
+		sbi	CTRLPORT,SIG2
+		cbi	CTRLDDR,SIG2
+		rcall	rl78_wait1ms
+				
 rl78_gdump_1:	call	recv2_38400
 		call	api_buf_bwrite
 		sbiw	r24,1

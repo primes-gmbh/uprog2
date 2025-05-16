@@ -23,42 +23,47 @@
 //###############################################################################
 #include <main.h>
 
-int s19tohex(void)
+int hex2hex(void)
 {
 	int errc,j;
 	int bpl=0;
 
-	printf("## S19 TO HEX converter\n");
+	printf("## HEX TO HEX converter\n");
 	printf("## IN:  %s\n",sfile);
 	printf("## OUT: %s\n",tfile);
 
-
 	if((strstr(cmd,"help")) && ((strstr(cmd,"help") - cmd) == 1))
 	{
-		printf("-- 04 -- 4 bytes per line\n");
-		printf("-- 08 -- 8 bytes per line\n");
-		printf("-- 16 -- 16 bytes per line\n");
+		printf("-- ll04 -- 4 bytes per line\n");
+		printf("-- ll08 -- 8 bytes per line\n");
+		printf("-- ll16 -- 16 bytes per line\n");
 		return 0;
 	}
 
 	bpl=32;
 
-	if(find_cmd("04"))
+	if(find_cmd("ll04"))
 	{
 		printf("## 4 bytes per line\n");
 		bpl=4;
 	}
 
-	if(find_cmd("08"))
+	if(find_cmd("ll08"))
 	{
 		printf("## 8 bytes per line\n");
 		bpl=8;
 	}
 
-	if(find_cmd("16"))
+	if(find_cmd("ll16"))
 	{
 		printf("## 16 bytes per line\n");
 		bpl=16;
+	}
+
+	if(find_cmd("ll32"))
+	{
+		printf("## 16 bytes per line\n");
+		bpl=32;
 	}
 
 	if(file_found < 2)
@@ -73,11 +78,15 @@ int s19tohex(void)
 		goto S192HEX_ERR;
 	}
 
-	read_block(0,65536,0);		//get data
-	for(j=0;j<65536;j++)
+	read_block(0,ROFFSET,0);		//get data
+	for(j=0;j<ROFFSET;j++)
 	{
 		memory[ROFFSET+j]=memory[j];
 	}
+
+	printf(">LO ADDR = %08X\n",loaddr & 0xFFFFFFFF);
+	printf(">HI ADDR = %08X\n",hiaddr & 0xFFFFFFFF);
+		
 	write_hexblock(loaddr,hiaddr-loaddr+1,loaddr,bpl);	
 
 S192HEX_ERR:

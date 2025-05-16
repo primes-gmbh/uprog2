@@ -63,6 +63,7 @@ bin:	dir $(COBJECTS) $(AOBJECTS)
 	$(OD) $(ODFLAGS) $(myNAME).elf > $(myNAME).dump
 	$(SZ) $(myNAME).elf
 	@dos2unix $(myNAME).s37
+	./generate_dumper.pl
 
 
 lib:	dir $(COBJECTS) $(AOBJECTS)

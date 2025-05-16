@@ -77,7 +77,6 @@ int prog_rundev(void)
 		hold_vdd=1;
 	}
 
-
 	if(find_cmd("s0"))
 	{
 		printf("## stopping device\n");
