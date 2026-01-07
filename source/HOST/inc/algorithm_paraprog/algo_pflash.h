@@ -1,3 +1,3 @@
 
 int prog_pflash(void);
-int paraprog_selftest(void);
+int paraprog_self_test(void);

@@ -34,6 +34,7 @@
 #include <main.h>
 #include <devices.h>
 #include <algorithm.h>
+#include <algorithm_paraprog/algo_pflash.h>
 #include <wires.h>
 
 extern int daemon_task(int);

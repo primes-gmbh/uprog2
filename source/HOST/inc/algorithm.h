@@ -17,6 +17,7 @@
 #include <algorithm/algo_pic16b.h>
 #include <algorithm/algo_pic16c.h>
 #include <algorithm/algo_pic16d.h>
+#include <algorithm/algo_pic16e.h>
 #include <algorithm/algo_pic18a.h>
 #include <algorithm/algo_pic18b.h>
 #include <algorithm/algo_ppcbam.h>
@@ -50,7 +51,7 @@
 #include <algorithm/algo_rh850.h>
 #include <algorithm/algo_v850.h>
 #include <algorithm/algo_cc2640.h>
-
+#include <algorithm/algo_xspi.h>
 
 
 
